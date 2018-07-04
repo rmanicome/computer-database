@@ -9,23 +9,26 @@
 					<fieldset>
 						<div class="form-group">
 							<label for="computerName">Computer name</label> <input
-								type="text" class="form-control" id="computerName"
-								placeholder="Computer name">
+								type="text" class="form-control" id="computerName" name="computerName"
+								placeholder="Computer name" onblur="verifNomComputer(this)">
 						</div>
 						<div class="form-group">
 							<label for="introduced">Introduced date</label> <input
-								type="date" class="form-control" id="introduced"
-								placeholder="Introduced date">
+								type="date" class="form-control" id="introduced" name="introduced"
+								placeholder="Introduced date" onblur="verifIntroducedDate(this)">
 						</div>
 						<div class="form-group">
 							<label for="discontinued">Discontinued date</label> <input
-								type="date" class="form-control" id="discontinued"
-								placeholder="Discontinued date">
+								type="date" class="form-control" id="discounted" name="discounted"
+								placeholder="Discontinued date" onblur="verifDiscountedDate(introduced,this)">
 						</div>
 						<div class="form-group">
 							<label for="companyId">Company</label> <select
-								class="form-control" id="companyId">
-								<option value="0">--</option>
+								class="form-control" id="companyId" name="companyId">
+								<option value="0">---</option>
+								<c:forEach var="company" items="${companies}">
+									<option value="${company.id}">${company.name}</option>
+								</c:forEach>
 							</select>
 						</div>
 					</fieldset>
@@ -38,5 +41,8 @@
 		</div>
 	</div>
 </section>
+
+<script src="js/verifForm.js"></script>
+
 </body>
 </html>

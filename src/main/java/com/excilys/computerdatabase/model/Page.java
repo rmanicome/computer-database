@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import com.excilys.computerdatabase.service.ComputerValues;
 
 public class Page<T> {
-	private static Integer maxComputerPerPage = 10;
+	private static Integer maxComputerPerPage = 50;
 	private static Integer pageNumber = 0;
+
+	public static int getMaxComputerPerPage() {
+		return maxComputerPerPage;
+	}
 	
 	public static void setMaxComputerPerPage(Integer newMax) {
 		maxComputerPerPage = newMax;

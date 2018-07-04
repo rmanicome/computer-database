@@ -181,7 +181,7 @@ public class CLI {
 			}
 			
 			Computer comp = computerValues.getComputerList().get(choice);
-			Integer id = comp.getId();
+			long id = comp.getId();
 			String name = comp.getName();
 			Date introducedDate = comp.getIntroducedDate();
 			Date discountedDate = comp.getDiscountedDate();

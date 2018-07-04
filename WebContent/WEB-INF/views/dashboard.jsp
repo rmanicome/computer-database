@@ -1,16 +1,15 @@
 <jsp:include page="head.jsp" />
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
 <section id="main">
 	<div class="container">
 		<h1 id="homeTitle">${size} Computers found</h1>
 		<div id="actions" class="form-horizontal">
 			<div class="pull-left">
-				<form id="searchForm" action="#" method="GET" class="form-inline">
+				<form id="searchForm" action="dashboard" method="GET" class="form-inline">
 
 					<input type="search" id="searchbox" name="search"
-						class="form-control" placeholder="Search name" /> <input
-						type="submit" id="searchsubmit" value="Filter by name"
+						class="form-control" placeholder="Search name" value="${search}"/> 
+					<input type="submit" id="searchsubmit" value="Filter by name"
 						class="btn btn-primary" />
 				</form>
 			</div>
@@ -22,7 +21,7 @@
 		</div>
 	</div>
 
-	<form id="deleteForm" action="#" method="POST">
+	<form id="deleteForm" action="deleteComputer" method="POST">
 		<input type="hidden" name="selection" value="">
 	</form>
 
@@ -54,8 +53,8 @@
 				<c:forEach var="computer" items="${computers}">
 					<tr>
 						<td class="editMode"><input type="checkbox" name="cb"
-							class="cb" value="0"></td>
-						<td><a href="editComputer" onclick="">${computer.name}</a></td>
+							class="cb" value="${computer.id}"></td>
+						<td><a href="editComputer?computer=${computer.id}" onclick="">${computer.name}</a></td>
 						<td>${computer.introducedDate}</td>
 						<td>${computer.discountedDate}</td>
 						<td>${computer.company.name}</td>
@@ -69,22 +68,39 @@
 <footer class="navbar-fixed-bottom">
 	<div class="container text-center">
 		<ul class="pagination">
-			<li><a href="dashboard?page=p" aria-label="Previous"> <span
-					aria-hidden="true">&laquo;</span>
-			</a></li>
-			<li><a href="dashboard?page=1">1</a></li>
-			<li><a href="dashboard?page=2">2</a></li>
-			<li><a href="dashboard?page=3">3</a></li>
-			<li><a href="dashboard?page=4">4</a></li>
-			<li><a href="dashboard?page=5">5</a></li>
-			<li><a href="dashboard?page=n" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-			</a></li>
+			<c:choose>
+				<c:when test="${search != null}">
+					<li><a href="dashboard?search=${search}&page=${page==1||page==null ? 1 : page-1}" aria-label="Previous"> <span
+							aria-hidden="true">&laquo;</span>
+					</a></li>
+					<li><a href="dashboard?search=${search}&page=${page < 3 ? 1 : page > pageMax-3 ? pageMax-4 : page-2}">${page < 3 ? 1 : page > pageMax-3 ? pageMax-4 : page-2}</a></li>
+					<li><a href="dashboard?search=${search}&page=${page < 3 ? 2 : page > pageMax-3 ? pageMax-3 : page-1}">${page < 3 ? 2 : page > pageMax-3 ? pageMax-3 : page-1}</a></li>
+					<li><a href="dashboard?search=${search}&page=${page < 3 ? 3 : page > pageMax-3 ? pageMax-2 : page}">${page < 3 ? 3 : page > pageMax-3 ? pageMax-2 : page}</a></li>
+					<li><a href="dashboard?search=${search}&page=${page < 3 ? 4 : page > pageMax-3 ? pageMax-1 : page+1}">${page < 3 ? 4 : page > pageMax-3 ? pageMax-1 : page+1}</a></li>
+					<li><a href="dashboard?search=${search}&page=${page < 3 ? 5 : page > pageMax-3 ? pageMax : page+2}">${page < 3 ? 5 : page > pageMax-3 ? pageMax : page+2}</a></li>
+					<li><a href="dashboard?search=${search}&page=${page+1 > pageMax ? page : page+1}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+					</a></li>
+				</c:when>
+				<c:otherwise>
+					<li><a href="dashboard?page=${page==1||page==null ? 1 : page-1}" aria-label="Previous"> <span
+							aria-hidden="true">&laquo;</span>
+					</a></li>
+					<li><a href="dashboard?page=${page < 3 ? 1 : page > pageMax-3 ? pageMax-4 : page-2}">${page < 3 ? 1 : page > pageMax-3 ? pageMax-4 : page-2}</a></li>
+					<li><a href="dashboard?page=${page < 3 ? 2 : page > pageMax-3 ? pageMax-3 : page-1}">${page < 3 ? 2 : page > pageMax-3 ? pageMax-3 : page-1}</a></li>
+					<li><a href="dashboard?page=${page < 3 ? 3 : page > pageMax-3 ? pageMax-2 : page}">${page < 3 ? 3 : page > pageMax-3 ? pageMax-2 : page}</a></li>
+					<li><a href="dashboard?page=${page < 3 ? 4 : page > pageMax-3 ? pageMax-1 : page+1}">${page < 3 ? 4 : page > pageMax-3 ? pageMax-1 : page+1}</a></li>
+					<li><a href="dashboard?page=${page < 3 ? 5 : page > pageMax-3 ? pageMax : page+2}">${page < 3 ? 5 : page > pageMax-3 ? pageMax : page+2}</a></li>
+					<li><a href="dashboard?page=${page+1 > pageMax ? page : page+1}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+					</a></li>
+				</c:otherwise>
+			</c:choose>
+			
 		</ul>
 
 		<div class="btn-group btn-group-sm pull-right" role="group">
-			<button type="button" class="btn btn-default">10</button>
-			<button type="button" class="btn btn-default">50</button>
-			<button type="button" class="btn btn-default">100</button>
+			<button type="button" class="btn btn-default" id="button1" value="10">10</button>
+			<button type="button" class="btn btn-default" value="50">50</button>
+			<button type="button" class="btn btn-default" value="100">100</button>
 		</div>
 	</div>
 </footer>

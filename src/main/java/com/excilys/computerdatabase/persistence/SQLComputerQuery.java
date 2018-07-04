@@ -26,13 +26,24 @@ public class SQLComputerQuery {
 
 		return computerList;
 	}
+	
+	public static Computer getComputer(Integer id) throws SQLException{
+		String computerQuery = "SELECT * FROM "+Constant.COMPUTER_TABLE+" WHERE "+Constant.COMPUTER_ID+"="+id+";";
+		ResultSet computer;
+		
+		Statement stmt = connexion.createStatement();
+		computer = stmt.executeQuery(computerQuery);
+		computer.next();
+		
+		return new Computer(computer.getInt(1), computer.getString(2), computer.getDate(3), computer.getDate(4), SQLCompanyQuery.getCompany(computer.getInt(5)));
+	}
 
 	public static void addComputer(Computer comp) throws SQLException {
 		String computerQuery = "INSERT INTO "+Constant.COMPUTER_TABLE+" ("+Constant.COMPUTER_ID+","+Constant.COMPUTER_NAME+","+Constant.COMPUTER_INTRODUCED+","+Constant.COMPUTER_DISCONTINUED+","+Constant.COMPUTER_COMPANY_ID+") "
 				+ "values ('"+comp.getId()+"','"+comp.getName()+"',"+
 				(comp.getIntroducedDate() == null ? comp.getIntroducedDate() : "'"+comp.getIntroducedDate()+"'")+","+
 				(comp.getDiscountedDate() == null ? comp.getDiscountedDate() : "'"+comp.getDiscountedDate()+"'")+","+
-				comp.getCompany()+");";
+				(comp.getCompany() == null ? null : comp.getCompany().getId())+");";
 
 		Statement stmt = connexion.createStatement();
 		stmt.executeUpdate(computerQuery);
@@ -42,7 +53,7 @@ public class SQLComputerQuery {
 		String computerQuery = "UPDATE "+Constant.COMPUTER_TABLE+" SET "+Constant.COMPUTER_NAME+" = '"+comp.getName()+"', "+Constant.COMPUTER_INTRODUCED+" = "+
 				(comp.getIntroducedDate() == null ? comp.getIntroducedDate() : "'"+comp.getIntroducedDate()+"'")+", "+Constant.COMPUTER_DISCONTINUED+" = "+
 				(comp.getDiscountedDate() == null ? comp.getDiscountedDate() : "'"+comp.getDiscountedDate()+"'")+", "+Constant.COMPUTER_COMPANY_ID+" = "+
-				comp.getCompany()+" WHERE "+Constant.COMPUTER_ID+" = '"+comp.getId()+"';";
+				(comp.getCompany() == null ? null : comp.getCompany().getId())+" WHERE "+Constant.COMPUTER_ID+" = '"+comp.getId()+"';";
 
 		Statement stmt = connexion.createStatement();
 		stmt.executeUpdate(computerQuery);

@@ -3,13 +3,13 @@ package com.excilys.computerdatabase.model;
 import java.sql.Date;
 
 public class Computer {
-	private Integer id;
+	private long id;
 	private String name;
 	private Date introducedDate;
 	private Date discountedDate;
 	private Company company;
 	
-	private static Integer biggestId = 0;
+	private static long biggestId = 0;
 	
 	public Computer(String name) {
 		biggestId += 1;
@@ -17,7 +17,7 @@ public class Computer {
 		this.name = name;
 	}
 	
-	public Computer(Integer id, String name, Date introducedDate, Date discountedDate, Company company) {
+	public Computer(long id, String name, Date introducedDate, Date discountedDate, Company company) {
 		if(id > biggestId)
 			biggestId = id;
 		
@@ -28,7 +28,7 @@ public class Computer {
 		this.company = company;
 	}
 	
-	public Integer getId() {
+	public long getId() {
 		return id;
 	}
 	
@@ -64,7 +64,7 @@ public class Computer {
 		return name;
 	}	
 	
-	public static Integer getBiggestId(){
+	public static long getBiggestId(){
 		return biggestId;
 	}
 	
