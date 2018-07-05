@@ -1,4 +1,4 @@
-package com.excilys.computerdatabse.validator;
+package com.excilys.computerdatabase.validator;
 
 import java.sql.Date;
 import java.text.DateFormat;
