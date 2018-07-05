@@ -5,7 +5,7 @@
 		<div class="row">
 			<div class="col-xs-8 col-xs-offset-2 box">
 				<h1>Add Computer</h1>
-				<form action="addComputer" method="POST">
+				<form action="addComputer" method="POST" onsubmit="return verifForm(this)">
 					<fieldset>
 						<div class="form-group">
 							<label for="computerName">Computer name</label> <input
@@ -19,7 +19,7 @@
 						</div>
 						<div class="form-group">
 							<label for="discontinued">Discontinued date</label> <input
-								type="date" class="form-control" id="discounted" name="discounted"
+								type="date" class="form-control" id="discontinued" name="discontinued"
 								placeholder="Discontinued date" onblur="verifDiscountedDate(introduced,this)">
 						</div>
 						<div class="form-group">

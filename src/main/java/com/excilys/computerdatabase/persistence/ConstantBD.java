@@ -1,6 +1,6 @@
-package com.excilys.computerdatabase.model;
+package com.excilys.computerdatabase.persistence;
 
-public class Constant {
+public class ConstantBD {
 	public final static String COMPUTER_TABLE = "computer";
 	public final static String COMPUTER_ID = "id";
 	public final static String COMPUTER_NAME = "name";

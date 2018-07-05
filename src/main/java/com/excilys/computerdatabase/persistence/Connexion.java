@@ -4,7 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Connexion {
+	final static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	private final static Connexion INSTANCE = new Connexion();
 	private static Connection con;
 	
@@ -14,9 +18,9 @@ public class Connexion {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection(url, "admincdb", "qwerty1234");
 		} catch (SQLException e) {
-			System.out.println("Erreur lors de la connection : "+e.getMessage());
+			logger.error(e.getMessage());
 		} catch (ClassNotFoundException e) {
-			System.out.println("Erreur lors de la connection sur le driver : "+e.getMessage());
+			logger.error(e.getMessage());
 		}
 	}
 	

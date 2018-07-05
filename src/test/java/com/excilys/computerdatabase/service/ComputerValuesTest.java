@@ -10,12 +10,12 @@ import junit.framework.TestCase;
 public class ComputerValuesTest extends TestCase {
 	
 	public void testGetCompanyList() {
-		ComputerValues comp = new ComputerValues();
+		ComputerService comp = new ComputerService();
 		assertNotNull(comp.getComputerList());
 	}
 	
 	public void testAddComputer() {
-		ComputerValues comp = new ComputerValues();
+		ComputerService comp = new ComputerService();
 		Integer size = comp.getComputerList().size();
 		try {
 			comp.addComputer(new Computer("un ordi"));
@@ -26,7 +26,7 @@ public class ComputerValuesTest extends TestCase {
 	}
 	
 	public void testUpdateComputer() {
-		ComputerValues compList = new ComputerValues();
+		ComputerService compList = new ComputerService();
 		Computer comp = compList.getComputerList().get(compList.getComputerList().size()-1);
 		Computer oldComp = new Computer(comp.getId(), comp.getName(), comp.getIntroducedDate(), comp.getDiscountedDate(), comp.getCompany());
 		comp.setCompany(new Company("une comapny"));
@@ -39,7 +39,7 @@ public class ComputerValuesTest extends TestCase {
 	}
 	
 	public void testDeleteComputer() {
-		ComputerValues compList = new ComputerValues();
+		ComputerService compList = new ComputerService();
 		Computer comp = compList.getComputerList().get(compList.getComputerList().size()-1);
 		Integer size = compList.getComputerList().size();
 		try {
@@ -51,7 +51,7 @@ public class ComputerValuesTest extends TestCase {
 	}
 	
 	public void testDeleteWrongComputer() {
-		ComputerValues compList = new ComputerValues();
+		ComputerService compList = new ComputerService();
 		Integer size = compList.getComputerList().size();
 		Computer comp = new Computer("Un ordi");
 		try {

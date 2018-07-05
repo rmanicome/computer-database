@@ -6,33 +6,68 @@ public class Computer {
 	private long id;
 	private String name;
 	private Date introducedDate;
-	private Date discountedDate;
+	private Date discontinuedDate;
 	private Company company;
 	
-	private static long biggestId = 0;
-	
 	public Computer(String name) {
-		biggestId += 1;
-		this.id = biggestId;
 		this.name = name;
 	}
 	
 	public Computer(long id, String name, Date introducedDate, Date discountedDate, Company company) {
-		if(id > biggestId)
-			biggestId = id;
-		
 		this.id = id;
 		this.name = name;
 		this.introducedDate = introducedDate;
-		this.discountedDate = discountedDate;
+		this.discontinuedDate = discountedDate;
 		this.company = company;
+	}
+	
+	
+	public static class ComputerBuilder {
+		long id;
+		String name;
+		Date introducedDate;
+		Date discontinuedDate;
+		Company company;
+		
+		public ComputerBuilder(String name) {
+			this.name = name;
+		}
+		
+		public ComputerBuilder withName(String name) {
+			this.name = name;
+			return this;
+		}
+		
+		public ComputerBuilder withId(long id){
+			this.id = id;
+			return this;
+		}
+		
+		public ComputerBuilder withIntroducedDate(Date introduced){
+			this.introducedDate = introduced;
+			return this;
+		}
+		
+		public ComputerBuilder withDiscountedDate(Date discontinued){
+			this.discontinuedDate = discontinued;
+			return this;
+		}
+		
+		public ComputerBuilder withCompany(Company company){
+			this.company = company;
+			return this;
+		}
+		
+		public Computer build(){
+			return new Computer(id, name, introducedDate, discontinuedDate, company);
+		}
 	}
 	
 	public long getId() {
 		return id;
 	}
 	
-	public void setId(Integer id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	
@@ -44,12 +79,12 @@ public class Computer {
 		this.introducedDate = introducedDate;
 	}
 
-	public Date getDiscountedDate() {
-		return discountedDate;
+	public Date getDiscontinuedDate() {
+		return discontinuedDate;
 	}
 
-	public void setDiscountedDate(Date discountedDate) {
-		this.discountedDate = discountedDate;
+	public void setDiscontinuedDate(Date discontinuedDate) {
+		this.discontinuedDate = discontinuedDate;
 	}
 
 	public Company getCompany() {
@@ -63,13 +98,4 @@ public class Computer {
 	public String getName() {
 		return name;
 	}	
-	
-	public static long getBiggestId(){
-		return biggestId;
-	}
-	
-	public static void setBiggestId(Integer biggestId) {
-		if(Computer.biggestId < biggestId)
-			Computer.biggestId = biggestId;
-	}
 }

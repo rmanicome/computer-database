@@ -12,7 +12,7 @@ public class SQLComputerQueryTest extends TestCase {
 	
 	public void testGetComputers(){
 		try {
-			ArrayList<Computer> compList = SQLComputerQuery.getComputers();
+			ArrayList<Computer> compList = ComputerDAO.getComputers();
 			assertNotNull(compList);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -21,11 +21,11 @@ public class SQLComputerQueryTest extends TestCase {
 	
 	public void testAddComputer(){
 		try {
-			ArrayList<Computer> compList = SQLComputerQuery.getComputers();
-			compList = SQLComputerQuery.getComputers();
+			ArrayList<Computer> compList = ComputerDAO.getComputers();
+			compList = ComputerDAO.getComputers();
 			Computer comp = new Computer("un ordi");
-			SQLComputerQuery.addComputer(comp);
-			assertFalse(compList.size()==SQLComputerQuery.getComputers().size());
+			ComputerDAO.addComputer(comp);
+			assertFalse(compList.size()==ComputerDAO.getComputers().size());
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -33,13 +33,13 @@ public class SQLComputerQueryTest extends TestCase {
 	
 	public void testUpdateComputer(){
 		try {
-			ArrayList<Computer> compList = SQLComputerQuery.getComputers();
-			compList = SQLComputerQuery.getComputers();
+			ArrayList<Computer> compList = ComputerDAO.getComputers();
+			compList = ComputerDAO.getComputers();
 			Computer comp = compList.get(compList.size()-1);
 			comp.setCompany(new Company("une company"));
-			SQLComputerQuery.updateComputer(comp);
-			compList = SQLComputerQuery.getComputers();
-			assertFalse(compList==SQLComputerQuery.getComputers());
+			ComputerDAO.updateComputer(comp);
+			compList = ComputerDAO.getComputers();
+			assertFalse(compList==ComputerDAO.getComputers());
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -47,11 +47,11 @@ public class SQLComputerQueryTest extends TestCase {
 	
 	public void testDeleteComputer(){
 		try {
-			ArrayList<Computer> compList = SQLComputerQuery.getComputers();
-			compList = SQLComputerQuery.getComputers();
+			ArrayList<Computer> compList = ComputerDAO.getComputers();
+			compList = ComputerDAO.getComputers();
 			Computer comp = compList.get(compList.size()-1);
-			SQLComputerQuery.deleteComputer(comp);
-			assertFalse(compList.size()==SQLComputerQuery.getComputers().size());
+			ComputerDAO.deleteComputer(comp);
+			assertFalse(compList.size()==ComputerDAO.getComputers().size());
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

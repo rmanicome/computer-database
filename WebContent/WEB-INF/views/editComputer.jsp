@@ -7,7 +7,7 @@
 				<div class="label label-default pull-right">id: ${computer.id}</div>
 				<h1>Edit Computer</h1>
 
-				<form action="editComputer?computer=${computer.id}" method="POST">
+				<form action="editComputer?computer=${computer.id}" method="POST" onsubmit="return verifForm(this)">
 					<input type="hidden" value="${computer.id}" id="id" name="id"/>
 					<!-- TODO: Change this value with the computer id -->
 					<fieldset>
@@ -23,8 +23,8 @@
 						</div>
 						<div class="form-group">
 							<label for="discontinued">Discontinued date</label> <input
-								type="date" class="form-control" id="discontinued" name="discounted"
-								placeholder="Discontinued date" value="${computer.discountedDate}">
+								type="date" class="form-control" id="discontinued" name="discontinued"
+								placeholder="Discontinued date" value="${computer.discontinuedDate}">
 						</div>
 						<div class="form-group">
 							<label for="companyId">Company</label> <select

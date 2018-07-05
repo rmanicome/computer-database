@@ -2,7 +2,7 @@ package com.excilys.computerdatabase.model;
 
 import java.util.ArrayList;
 
-import com.excilys.computerdatabase.service.ComputerValues;
+import com.excilys.computerdatabase.service.ComputerService;
 
 public class Page<T> {
 	private static Integer maxComputerPerPage = 50;
@@ -20,15 +20,15 @@ public class Page<T> {
 		pageNumber = newPage;
 	}
 	
-	public void getPreviousPage() {
+	public void previousPage() {
 		pageNumber -= 1;
 	}
 
-	public void getNextPage() {
+	public void nextPage() {
 		pageNumber += 1;
 	}
 
-	public ArrayList<T> getPage(ArrayList<T> values) {
+	public ArrayList<T> get(ArrayList<T> values) {
 		if((pageNumber+1) * maxComputerPerPage < (values.size()))
 			return new ArrayList<T> (values.subList(pageNumber * maxComputerPerPage , (pageNumber+1) * maxComputerPerPage));
 
@@ -39,7 +39,7 @@ public class Page<T> {
 		return pageNumber > 0;
 	}
 
-	public Boolean hasNextPage(ComputerValues computerValues) {
-		return pageNumber * maxComputerPerPage < computerValues.getComputerList().size();
+	public Boolean hasNextPage(ComputerService computerService) {
+		return pageNumber * maxComputerPerPage < computerService.get().size();
 	}
 }

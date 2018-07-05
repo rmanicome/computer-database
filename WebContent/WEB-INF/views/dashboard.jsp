@@ -56,7 +56,7 @@
 							class="cb" value="${computer.id}"></td>
 						<td><a href="editComputer?computer=${computer.id}" onclick="">${computer.name}</a></td>
 						<td>${computer.introducedDate}</td>
-						<td>${computer.discountedDate}</td>
+						<td>${computer.discontinuedDate}</td>
 						<td>${computer.company.name}</td>
 					</tr>
 				</c:forEach>

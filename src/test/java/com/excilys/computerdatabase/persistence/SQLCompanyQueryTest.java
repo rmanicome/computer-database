@@ -7,7 +7,7 @@ public class SQLCompanyQueryTest extends TestCase {
 	
 	public void testGetCompanies() {
 		try {
-			assertNotNull(SQLCompanyQuery.getCompanies());
+			assertNotNull(CompanyDAO.getCompanies());
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -15,7 +15,7 @@ public class SQLCompanyQueryTest extends TestCase {
 	
 	public void testGetCompany() {
 		try {
-			assertNotNull(SQLCompanyQuery.getCompany(SQLCompanyQuery.getCompanies().get(0).getName()));
+			assertNotNull(CompanyDAO.getCompany(CompanyDAO.getCompanies().get(0).getName()));
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

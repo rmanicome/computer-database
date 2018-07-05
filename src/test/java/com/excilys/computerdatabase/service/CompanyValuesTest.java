@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 public class CompanyValuesTest extends TestCase {
 	
 	public void testGetCompanyList() {
-		CompanyValues comp = new CompanyValues();
+		CompanyService comp = new CompanyService();
 		assertNotNull(comp.getCompanyList());
 	}
 }
