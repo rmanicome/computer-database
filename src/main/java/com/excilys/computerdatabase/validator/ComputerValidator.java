@@ -8,7 +8,8 @@ import com.excilys.computerdatabase.service.CompanyService;
 
 public class ComputerValidator {
 	private final static ComputerValidator INSTANCE = new ComputerValidator();
-		
+	private final static String SEPARATOR = "-";
+	
 	private ComputerValidator() {
 		
 	}
@@ -17,26 +18,33 @@ public class ComputerValidator {
 		return INSTANCE;
 	}
 	
-	public Boolean checkName(String name){
+	private Boolean checkName(String name){
 		return name.length() > 1 && !name.contains(",") && !name.contains(";") && !name.contains("'");
 	}
 	
-	public Boolean checkDateFormat(String date){
-		return date.matches("[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]");
+	private Boolean checkDateFormat(String date){
+		return date.substring(0, date.indexOf(SEPARATOR)).matches("[1-2][0-9]{3}") && 
+				date.substring(date.indexOf(SEPARATOR) + 1, date.lastIndexOf(SEPARATOR)).matches("0?[1-9]|1[0-2]") && 
+				date.substring(date.lastIndexOf(SEPARATOR) + 1).matches("[0-2][0-9]|3[0-1]");
 	}
 	
-	public Boolean checkIntroduced(String introduced){
+	private Boolean checkDateReality(String date){
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date today = new java.util.Date();
-		return checkDateFormat(introduced) && Date.valueOf(introduced).before(Date.valueOf(dateFormat.format(today)));
+		return Date.valueOf(date).before(Date.valueOf(dateFormat.format(today))) || Date.valueOf(date).equals(Date.valueOf(dateFormat.format(today)));
 	}
 	
-	public Boolean checkDiscontinued(String introduced, String discontinued){
-		return checkDateFormat(discontinued) && Date.valueOf(discontinued).before(Date.valueOf(introduced)); 
+	private Boolean checkIntroduced(String introduced){
+		
+		return introduced == "" || (checkDateFormat(introduced) && checkDateReality(introduced));
 	}
 	
-	public Boolean checkCompanyId(String id){
-		return id.matches("[0-9]*") && CompanyService.getInstance().get(Integer.getInteger(id)).isPresent();
+	private Boolean checkDiscontinued(String introduced, String discontinued){
+		return discontinued == "" || (checkDateFormat(discontinued) && checkDateReality(discontinued) && Date.valueOf(discontinued).after(Date.valueOf(introduced))); 
+	}
+	
+	private Boolean checkCompanyId(String id){
+		return id == null || Integer.parseInt(id) == 0 || (id.matches("[1-9][0-9]*") && CompanyService.getInstance().get(Integer.parseInt(id)).isPresent());
 	}
 	
 	public Boolean checkComputer(String name, String introduced, String discontinued, String id){

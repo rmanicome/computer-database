@@ -7,24 +7,33 @@
 				<div class="label label-default pull-right">id: ${computer.id}</div>
 				<h1>Edit Computer</h1>
 
-				<form action="editComputer?computer=${computer.id}" method="POST" onsubmit="return verifForm(this)">
+				<form action="editComputer?computer=${computer.id}" method="POST" id="form" name="form" onsubmit="return verifForm();">
 					<input type="hidden" value="${computer.id}" id="id" name="id"/>
 					<!-- TODO: Change this value with the computer id -->
 					<fieldset>
 						<div class="form-group">
 							<label for="computerName">Computer name</label> <input
 								type="text" class="form-control" id="computerName" name="computerName"
-								placeholder="Computer name" value="${computer.name}">
+								placeholder="Computer name" value="${computer.name}" onblur="verifNomComputer(this)">
+						</div>
+						<div id="nameError" style="display:none;">
+							<p>The name is incorrect</p>
 						</div>
 						<div class="form-group">
 							<label for="introduced">Introduced date</label> <input
 								type="date" class="form-control" id="introduced" name="introduced"
-								placeholder="Introduced date" value="${computer.introducedDate}">
+								placeholder="Introduced date" value="${computer.introducedDate}" onblur="verifIntroducedDate(this)">
+						</div>
+						<div id="introducedError" style="display:none;">
+								<p>The introduced date can't be after today's date</p>
 						</div>
 						<div class="form-group">
 							<label for="discontinued">Discontinued date</label> <input
 								type="date" class="form-control" id="discontinued" name="discontinued"
-								placeholder="Discontinued date" value="${computer.discontinuedDate}">
+								placeholder="Discontinued date" value="${computer.discontinuedDate}" onblur="verifDiscountedDate(document.getElementById('introduced'),this)">
+						</div>
+						<div id="discontinuedError" style="display:none;">
+								<p id="discontinuedText">The discontinued date is incorrect</p>
 						</div>
 						<div class="form-group">
 							<label for="companyId">Company</label> <select

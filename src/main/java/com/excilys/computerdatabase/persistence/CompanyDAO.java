@@ -15,9 +15,12 @@ import com.excilys.computerdatabase.model.Company;
 public class CompanyDAO {
 	final static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	private final static CompanyDAO INSTANCE = new CompanyDAO();
+	
+	private final static String VARIABLE_1 = "variable1";
+	
 	private final static String GET = "SELECT "+ConstantBD.COMPANY_ID+","+ConstantBD.COMPANY_NAME+" FROM "+ConstantBD.COMPANY_TABLE+";";
-	private final static String GET_BY_NAME = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_NAME+" = '1';"; 
-	private final static String GET_BY_ID = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = '1';";
+	private final static String GET_BY_NAME = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_NAME+" = '"+VARIABLE_1+"';"; 
+	private final static String GET_BY_ID = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = '"+VARIABLE_1+"';";
 	
 	private CompanyDAO(){
 		
@@ -53,8 +56,7 @@ public class CompanyDAO {
 			Statement stmt = connexion.createStatement();
 			
 			String query = GET_BY_NAME.toString();
-			query = query.replace("1", name);
-			
+			query = query.replace(VARIABLE_1, name);
 			id = stmt.executeQuery(query);
 
 			if(id.next())
@@ -74,8 +76,7 @@ public class CompanyDAO {
 			Statement stmt = connexion.createStatement();
 			
 			String query = GET_BY_ID.toString();
-			query = query.replace("1", id.toString());
-			
+			query = query.replace(VARIABLE_1, id.toString());
 			company = stmt.executeQuery(query);
 			
 			if(company.next())

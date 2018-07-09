@@ -1,17 +1,16 @@
 package com.excilys.computerdatabase.servlet;
 
 import java.io.IOException;
-import java.sql.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.computerdatabase.model.Company;
-import com.excilys.computerdatabase.model.Computer;
+import com.excilys.computerdatabase.mapper.ComputerMapper;
 import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
+import com.excilys.computerdatabase.validator.ComputerValidator;
 
 @WebServlet("/addComputer")
 public class AddComputer extends HttpServlet {
@@ -27,13 +26,12 @@ public class AddComputer extends HttpServlet {
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Company company = request.getParameter("companyId") == null ? null : (CompanyService.getInstance().get(Integer.parseInt(request.getParameter("companyId"))).orElse(null));
-		ComputerService compList = ComputerService.getInstance();
-		Computer newComp = new Computer(request.getParameter("computerName"));
-		newComp.setIntroducedDate(request.getParameter("introduced") != null && request.getParameter("introduced").matches("[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]") ? Date.valueOf((String)request.getParameter("introduced")) : null);
-		newComp.setDiscontinuedDate(request.getParameter("discontinued") != null && request.getParameter("discontinued").matches("[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]") ? Date.valueOf((String)request.getParameter("discontinued")) : null); 
-		newComp.setCompany(company);
-		compList.add(newComp);
-		response.sendRedirect("dashboard");
+		if(ComputerValidator.getInstance().checkComputer(request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId"))){
+			ComputerService.getInstance().add(ComputerMapper.getInstance().nom("0", request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId")));
+			response.sendRedirect("dashboard");
+		} else {
+			request.setAttribute("error", "The computer was not added. One or many fields were wrong.");
+			this.getServletContext().getRequestDispatcher( "/WEB-INF/views/500.jsp" ).forward( request, response );
+		}
 	}
 }

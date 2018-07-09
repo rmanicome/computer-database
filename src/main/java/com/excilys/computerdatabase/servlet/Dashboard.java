@@ -20,34 +20,46 @@ public class Dashboard extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private Integer pageRequest(HttpServletRequest request) {
+		ArrayList<Computer> computerList = ComputerService.getInstance().get();
+		Integer page;
+		
+		if(request.getParameter("page")!=null){
+			if(Integer.parseInt(request.getParameter("page")) < computerList.size() / Page.getMaxComputerPerPage() + (computerList.size() % Page.getMaxComputerPerPage() == 0 ? 0 : 1))
+				page = Integer.parseInt(request.getParameter("page"));
+			else
+				page = computerList.size() / Page.getMaxComputerPerPage() + (computerList.size() % Page.getMaxComputerPerPage() == 0 ? 0 : 1);
+			Page.setPageNumber(page-1);
+		} else {
+			page = 1;
+			Page.setPageNumber(page-1);
+		}
+		
+		return page;
+	}
+	
+	private ArrayList<Computer> searchRequest(String request) {
+		ArrayList<Computer> searchList = new ArrayList<Computer>();
+		
+		for (Computer computer : ComputerService.getInstance().get()) {
+			if(computer.getName().toLowerCase().contains(request.toLowerCase()) || (computer.getCompany() != null && computer.getCompany().getName().toLowerCase().contains(request.toLowerCase())))
+				searchList.add(computer);
+		}
+		
+		return searchList;
+	}
+	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ComputerService computerService = ComputerService.getInstance();
 		ArrayList<Computer> computerList = computerService.get();
 		Page<Computer> page = new Page<Computer>();
-		Integer p;
-		
+			
 		if(request.getParameter("search") != null){
-			ArrayList<Computer> searchList = new ArrayList<Computer>();
 			request.setAttribute("search", request.getParameter("search"));
-			for (Computer computer : computerList) {
-				if(computer.getName().toLowerCase().contains(request.getParameter("search").toLowerCase()))
-					searchList.add(computer);
-			}
-			computerList = searchList;
+			computerList = searchRequest(request.getParameter("search"));
 		}
 		
-		if(request.getParameter("page")!=null){
-			if(Integer.parseInt(request.getParameter("page")) < computerList.size() / Page.getMaxComputerPerPage() + (computerList.size() % Page.getMaxComputerPerPage() == 0 ? 0 : 1))
-				p = Integer.parseInt(request.getParameter("page"));
-			else
-				p = computerList.size() / Page.getMaxComputerPerPage() + (computerList.size() % Page.getMaxComputerPerPage() == 0 ? 0 : 1);
-			Page.setPageNumber(p-1);
-		} else {
-			p = 1;
-			Page.setPageNumber(0);
-		}
-				
-		request.setAttribute("page", p);
+		request.setAttribute("page", pageRequest(request));
 		request.setAttribute("computerPerPage", Page.getMaxComputerPerPage());
 		request.setAttribute("computers", page.get(computerList));
 		request.setAttribute("size", computerList.size());

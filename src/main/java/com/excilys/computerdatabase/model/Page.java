@@ -29,6 +29,9 @@ public class Page<T> {
 	}
 
 	public ArrayList<T> get(ArrayList<T> values) {
+		if(pageNumber * maxComputerPerPage > values.size())
+			return new ArrayList<T>(values.subList(values.size() - maxComputerPerPage, values.size()));
+			
 		if((pageNumber+1) * maxComputerPerPage < (values.size()))
 			return new ArrayList<T> (values.subList(pageNumber * maxComputerPerPage , (pageNumber+1) * maxComputerPerPage));
 
