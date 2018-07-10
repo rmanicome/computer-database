@@ -34,8 +34,7 @@ public class CompanyDAO {
 	
 	public ArrayList<Company> get() {
 		ArrayList<Company> companyList = new ArrayList<Company>();
-		try {
-			Connection connexion = ConnectionPool.getConnection();
+		try (Connection connexion = ConnectionPool.getConnection()){
 			ResultSet companies;
 			Statement stmt = connexion.createStatement();
 
@@ -46,7 +45,6 @@ public class CompanyDAO {
 			}
 			
 			stmt.close();
-			connexion.close();
 			
 			return companyList;
 		} catch (SQLException e) {
@@ -56,8 +54,7 @@ public class CompanyDAO {
 	}
 	
 	public Optional<Company> get(String name) {
-		try {
-			Connection connexion = ConnectionPool.getConnection();
+		try (Connection connexion = ConnectionPool.getConnection()){
 			ResultSet id;
 			Statement stmt = connexion.createStatement();
 			
@@ -68,12 +65,10 @@ public class CompanyDAO {
 			if(id.next()){
 				Company comp = new Company(id.getInt(1),id.getString(2));
 				stmt.close();
-				connexion.close();
 				return Optional.of(comp);
 			}
 			
 			stmt.close();
-			connexion.close();
 			
 			return Optional.empty();
 		} catch (SQLException e) {
@@ -83,8 +78,7 @@ public class CompanyDAO {
 }
 	
 	public Optional<Company> get(Integer id) {
-		try {
-			Connection connexion = ConnectionPool.getConnection();
+		try (Connection connexion = ConnectionPool.getConnection()){
 			ResultSet company;
 			Statement stmt = connexion.createStatement();
 			
@@ -95,12 +89,10 @@ public class CompanyDAO {
 			if(company.next()){
 				Company comp = new Company(company.getInt(1),company.getString(2));
 				stmt.close();
-				connexion.close();
 				return Optional.of(comp);
 			}
 			
 			stmt.close();
-			connexion.close();
 			
 			return Optional.empty();
 		} catch (SQLException e) {
@@ -110,8 +102,7 @@ public class CompanyDAO {
 	}
 	
 	public void delete(Integer id) {
-		try {
-			Connection connexion = ConnectionPool.getConnection();
+		try (Connection connexion = ConnectionPool.getConnection()){
 			Statement stmt = connexion.createStatement();
 			
 			connexion.setAutoCommit(false);
@@ -128,7 +119,6 @@ public class CompanyDAO {
 			connexion.setAutoCommit(true);
 			
 			stmt.close();
-			connexion.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}

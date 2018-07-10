@@ -64,9 +64,8 @@ public class ComputerDAO {
 	
 	public ArrayList<Computer> get(){
 		ArrayList<Computer> computerList = new ArrayList<Computer>();
-		Connection connexion = ConnectionPool.getConnection();
 		
-		try {
+		try (Connection connexion = ConnectionPool.getConnection()){
 			CompanyService companyService = CompanyService.getInstance();
 			Statement stmt = connexion.createStatement();
 			ResultSet computers;
@@ -81,7 +80,6 @@ public class ComputerDAO {
 			}
 			
 			stmt.close();
-			connexion.close();
 			
 			return computerList;
 		} catch (SQLException e) {
@@ -91,8 +89,7 @@ public class ComputerDAO {
 	}
 	
 	public Optional<Computer> get(Integer id) {
-		try {
-			Connection connexion = ConnectionPool.getConnection();
+		try (Connection connexion = ConnectionPool.getConnection()){
 			CompanyService companyService = CompanyService.getInstance();
 			ResultSet computer;
 			
@@ -112,8 +109,7 @@ public class ComputerDAO {
 	}
 
 	public void add(Computer comp) {
-		try {
-			Connection connexion = ConnectionPool.getConnection();
+		try (Connection connexion = ConnectionPool.getConnection()){
 			Statement stmt = connexion.createStatement();
 			
 			String newQuery = ADD.toString();
@@ -125,7 +121,6 @@ public class ComputerDAO {
 			stmt.executeUpdate(newQuery);
 			
 			stmt.close();
-			connexion.close();
 			
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
@@ -133,8 +128,7 @@ public class ComputerDAO {
 	}
 
 	public void update(Computer comp) {
-		try {
-			Connection connexion = ConnectionPool.getConnection();
+		try (Connection connexion = ConnectionPool.getConnection()){
 			Statement stmt = connexion.createStatement();
 			String newQuery = UPDATE.toString();
 			newQuery = newQuery.replace(VARIABLE_5,String.valueOf(comp.getId()));
@@ -145,21 +139,18 @@ public class ComputerDAO {
 			stmt.executeUpdate(newQuery);
 			
 			stmt.close();
-			connexion.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
 	}
 
 	public void delete(Computer comp) {
-		try {
-			Connection connexion = ConnectionPool.getConnection();
+		try (Connection connexion = ConnectionPool.getConnection()){
 			Statement stmt = connexion.createStatement();
 			
 			stmt.executeUpdate(DELETE.replaceFirst(VARIABLE_1, String.valueOf(comp.getId())));
 			
 			stmt.close();
-			connexion.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
