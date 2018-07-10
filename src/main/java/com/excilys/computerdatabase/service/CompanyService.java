@@ -30,4 +30,7 @@ public class CompanyService {
 		return companyDAO.get(id);
 	}
 
+	public void delete(Integer id){
+		companyDAO.delete(id);
+	}
 }

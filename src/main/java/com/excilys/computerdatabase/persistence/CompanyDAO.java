@@ -21,6 +21,8 @@ public class CompanyDAO {
 	private final static String GET = "SELECT "+ConstantBD.COMPANY_ID+","+ConstantBD.COMPANY_NAME+" FROM "+ConstantBD.COMPANY_TABLE+";";
 	private final static String GET_BY_NAME = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_NAME+" = '"+VARIABLE_1+"';"; 
 	private final static String GET_BY_ID = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = '"+VARIABLE_1+"';";
+	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = '"+VARIABLE_1+"';";
+	private final static String DELETE_COMPUTER = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_COMPANY_ID+" = '"+VARIABLE_1+"';";
 	
 	private CompanyDAO(){
 		
@@ -33,7 +35,7 @@ public class CompanyDAO {
 	public ArrayList<Company> get() {
 		ArrayList<Company> companyList = new ArrayList<Company>();
 		try {
-			Connection connexion = Connexion.getInstance().getConnection();
+			Connection connexion = ConnectionPool.getConnection();
 			ResultSet companies;
 			Statement stmt = connexion.createStatement();
 
@@ -42,6 +44,10 @@ public class CompanyDAO {
 			while(companies.next()){
 				companyList.add(new Company(companies.getInt(1),companies.getString(2)));
 			}
+			
+			stmt.close();
+			connexion.close();
+			
 			return companyList;
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
@@ -51,7 +57,7 @@ public class CompanyDAO {
 	
 	public Optional<Company> get(String name) {
 		try {
-			Connection connexion = Connexion.getInstance().getConnection();
+			Connection connexion = ConnectionPool.getConnection();
 			ResultSet id;
 			Statement stmt = connexion.createStatement();
 			
@@ -59,8 +65,15 @@ public class CompanyDAO {
 			query = query.replace(VARIABLE_1, name);
 			id = stmt.executeQuery(query);
 
-			if(id.next())
-				return Optional.of(new Company(id.getInt(1),id.getString(2)));
+			if(id.next()){
+				Company comp = new Company(id.getInt(1),id.getString(2));
+				stmt.close();
+				connexion.close();
+				return Optional.of(comp);
+			}
+			
+			stmt.close();
+			connexion.close();
 			
 			return Optional.empty();
 		} catch (SQLException e) {
@@ -71,7 +84,7 @@ public class CompanyDAO {
 	
 	public Optional<Company> get(Integer id) {
 		try {
-			Connection connexion = Connexion.getInstance().getConnection();
+			Connection connexion = ConnectionPool.getConnection();
 			ResultSet company;
 			Statement stmt = connexion.createStatement();
 			
@@ -79,8 +92,15 @@ public class CompanyDAO {
 			query = query.replace(VARIABLE_1, id.toString());
 			company = stmt.executeQuery(query);
 			
-			if(company.next())
-				return Optional.of(new Company(company.getInt(1),company.getString(2)));
+			if(company.next()){
+				Company comp = new Company(company.getInt(1),company.getString(2));
+				stmt.close();
+				connexion.close();
+				return Optional.of(comp);
+			}
+			
+			stmt.close();
+			connexion.close();
 			
 			return Optional.empty();
 		} catch (SQLException e) {
@@ -88,5 +108,29 @@ public class CompanyDAO {
 			return Optional.empty();
 		}
 	}
-
+	
+	public void delete(Integer id) {
+		try {
+			Connection connexion = ConnectionPool.getConnection();
+			Statement stmt = connexion.createStatement();
+			
+			connexion.setAutoCommit(false);
+			
+			String queryCompany = DELETE.toString();
+			String queryComputer = DELETE_COMPUTER.toString();
+			queryCompany = queryCompany.replace(VARIABLE_1, id.toString());
+			queryComputer = queryComputer.replace(VARIABLE_1, id.toString());
+			stmt.executeUpdate(queryCompany);
+			stmt.executeUpdate(queryComputer);
+			
+			connexion.commit();
+			
+			connexion.setAutoCommit(true);
+			
+			stmt.close();
+			connexion.close();
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+	}
 }

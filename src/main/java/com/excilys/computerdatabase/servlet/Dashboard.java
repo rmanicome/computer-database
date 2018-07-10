@@ -42,7 +42,7 @@ public class Dashboard extends HttpServlet {
 		ArrayList<Computer> searchList = new ArrayList<Computer>();
 		
 		for (Computer computer : ComputerService.getInstance().get()) {
-			if(computer.getName().toLowerCase().contains(request.toLowerCase()) || (computer.getCompany() != null && computer.getCompany().getName().toLowerCase().contains(request.toLowerCase())))
+			if(computer.getName().toLowerCase().startsWith(request.toLowerCase()) || (computer.getCompany() != null && computer.getCompany().getName().toLowerCase().startsWith(request.toLowerCase())))
 				searchList.add(computer);
 		}
 		

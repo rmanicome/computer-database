@@ -64,7 +64,7 @@ public class ComputerDAO {
 	
 	public ArrayList<Computer> get(){
 		ArrayList<Computer> computerList = new ArrayList<Computer>();
-		Connection connexion = Connexion.getInstance().getConnection();
+		Connection connexion = ConnectionPool.getConnection();
 		
 		try {
 			CompanyService companyService = CompanyService.getInstance();
@@ -80,6 +80,9 @@ public class ComputerDAO {
 						.withCompany(companyService.get(computers.getInt(5)).orElse(null)).build());
 			}
 			
+			stmt.close();
+			connexion.close();
+			
 			return computerList;
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
@@ -89,7 +92,7 @@ public class ComputerDAO {
 	
 	public Optional<Computer> get(Integer id) {
 		try {
-			Connection connexion = Connexion.getInstance().getConnection();
+			Connection connexion = ConnectionPool.getConnection();
 			CompanyService companyService = CompanyService.getInstance();
 			ResultSet computer;
 			
@@ -110,7 +113,7 @@ public class ComputerDAO {
 
 	public void add(Computer comp) {
 		try {
-			Connection connexion = Connexion.getInstance().getConnection();
+			Connection connexion = ConnectionPool.getConnection();
 			Statement stmt = connexion.createStatement();
 			
 			String newQuery = ADD.toString();
@@ -120,6 +123,10 @@ public class ComputerDAO {
 			newQuery = newQuery.replace(VARIABLE_4,(comp.getDiscontinuedDate() == null ? "null" : "'"+comp.getDiscontinuedDate()+"'"));
 			newQuery = newQuery.replace(VARIABLE_5,(comp.getCompany() == null ? "null" : comp.getCompany().getId().toString()));
 			stmt.executeUpdate(newQuery);
+			
+			stmt.close();
+			connexion.close();
+			
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -127,7 +134,7 @@ public class ComputerDAO {
 
 	public void update(Computer comp) {
 		try {
-			Connection connexion = Connexion.getInstance().getConnection();
+			Connection connexion = ConnectionPool.getConnection();
 			Statement stmt = connexion.createStatement();
 			String newQuery = UPDATE.toString();
 			newQuery = newQuery.replace(VARIABLE_5,String.valueOf(comp.getId()));
@@ -136,6 +143,9 @@ public class ComputerDAO {
 			newQuery = newQuery.replace(VARIABLE_3,(comp.getDiscontinuedDate() == null ? "null" : "'"+comp.getDiscontinuedDate()+"'"));
 			newQuery = newQuery.replace(VARIABLE_4,(comp.getCompany() == null ? "null" : comp.getCompany().getId().toString()));
 			stmt.executeUpdate(newQuery);
+			
+			stmt.close();
+			connexion.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -143,10 +153,13 @@ public class ComputerDAO {
 
 	public void delete(Computer comp) {
 		try {
-			Connection connexion = Connexion.getInstance().getConnection();
+			Connection connexion = ConnectionPool.getConnection();
 			Statement stmt = connexion.createStatement();
 			
 			stmt.executeUpdate(DELETE.replaceFirst(VARIABLE_1, String.valueOf(comp.getId())));
+			
+			stmt.close();
+			connexion.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
