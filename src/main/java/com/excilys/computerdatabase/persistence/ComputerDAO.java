@@ -1,6 +1,7 @@
 package com.excilys.computerdatabase.persistence;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,12 +19,6 @@ public class ComputerDAO {
 	private final static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	private final static ComputerDAO INSTANCE = new ComputerDAO();
 	
-	private final static String VARIABLE_1 = "variable1";
-	private final static String VARIABLE_2 = "variable2";
-	private final static String VARIABLE_3 = "variable3";
-	private final static String VARIABLE_4 = "variable4";
-	private final static String VARIABLE_5 = "variable5";
-	
 	private final static String GET_LIST = 
 			"SELECT "+ConstantBD.COMPUTER_ID+","
 					+ConstantBD.COMPUTER_NAME+","
@@ -37,7 +32,7 @@ public class ComputerDAO {
 					+ConstantBD.COMPUTER_INTRODUCED+","
 					+ConstantBD.COMPUTER_DISCONTINUED+","
 					+ConstantBD.COMPUTER_COMPANY_ID+
-			" FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+"= '"+VARIABLE_1+"';";
+			" FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+"= ?;";
 	private final static String ADD = 
 			"INSERT INTO "+ConstantBD.COMPUTER_TABLE+" ("
 					+ConstantBD.COMPUTER_ID+","
@@ -45,14 +40,14 @@ public class ComputerDAO {
 					+ConstantBD.COMPUTER_INTRODUCED+","
 					+ConstantBD.COMPUTER_DISCONTINUED+","
 					+ConstantBD.COMPUTER_COMPANY_ID+") "
-			+ "values ('"+VARIABLE_1+"','"+VARIABLE_2+"',"+VARIABLE_3+","+VARIABLE_4+","+VARIABLE_5+");";
+			+ "values (?, ?, ?, ?, ?);";
 	private final static String UPDATE = 
 			"UPDATE "+ConstantBD.COMPUTER_TABLE+
-			" SET "+ConstantBD.COMPUTER_NAME+" = '"+VARIABLE_1+"', "+ConstantBD.COMPUTER_INTRODUCED+" = "+VARIABLE_2+", "
-					+ConstantBD.COMPUTER_DISCONTINUED+" = "+VARIABLE_3+", "
-					+ConstantBD.COMPUTER_COMPANY_ID+" = "+VARIABLE_4+
-					" WHERE "+ConstantBD.COMPUTER_ID+" = '"+VARIABLE_5+"';";
-	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+" = "+VARIABLE_1+";";
+			" SET "+ConstantBD.COMPUTER_NAME+" = ?, "
+					+ConstantBD.COMPUTER_INTRODUCED+" = ?, "
+					+ConstantBD.COMPUTER_DISCONTINUED+" = ?, "
+					+ConstantBD.COMPUTER_COMPANY_ID+" = ? WHERE "+ConstantBD.COMPUTER_ID+" = ?;";
+	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+" = ?;";
 	
 	private ComputerDAO(){
 		
@@ -93,8 +88,9 @@ public class ComputerDAO {
 			CompanyService companyService = CompanyService.getInstance();
 			ResultSet computer;
 			
-			Statement stmt = connexion.createStatement();
-			computer = stmt.executeQuery(GET_BY_ID.replaceFirst(VARIABLE_1, id.toString()));
+			PreparedStatement query = connexion.prepareStatement(GET_BY_ID);
+			query.setInt(1, id);
+			computer = query.executeQuery();
 			computer.next();
 			
 			return Optional.of(new ComputerBuilder(computer.getString(2))
@@ -110,18 +106,16 @@ public class ComputerDAO {
 
 	public void add(Computer comp) {
 		try (Connection connexion = ConnectionPool.getConnection()){
-			Statement stmt = connexion.createStatement();
-			
-			String newQuery = ADD.toString();
-			newQuery = newQuery.replace(VARIABLE_1,String.valueOf(comp.getId()));
-			newQuery = newQuery.replace(VARIABLE_2, comp.getName());
-			newQuery = newQuery.replace(VARIABLE_3, (comp.getIntroducedDate() == null ? "null" : "'"+comp.getIntroducedDate()+"'"));
-			newQuery = newQuery.replace(VARIABLE_4,(comp.getDiscontinuedDate() == null ? "null" : "'"+comp.getDiscontinuedDate()+"'"));
-			newQuery = newQuery.replace(VARIABLE_5,(comp.getCompany() == null ? "null" : comp.getCompany().getId().toString()));
-			stmt.executeUpdate(newQuery);
-			
-			stmt.close();
-			
+			PreparedStatement query = connexion.prepareStatement(ADD);
+			query.setInt(1, (int) comp.getId());
+			query.setString(2, comp.getName());
+			query.setDate(3, comp.getIntroducedDate());
+			query.setDate(4, comp.getDiscontinuedDate());
+			if(comp.getCompany() != null)
+				query.setInt(5,comp.getCompany().getId());
+			else
+				query.setNull(5, 0);
+			query.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -129,16 +123,16 @@ public class ComputerDAO {
 
 	public void update(Computer comp) {
 		try (Connection connexion = ConnectionPool.getConnection()){
-			Statement stmt = connexion.createStatement();
-			String newQuery = UPDATE.toString();
-			newQuery = newQuery.replace(VARIABLE_5,String.valueOf(comp.getId()));
-			newQuery = newQuery.replace(VARIABLE_1, comp.getName());
-			newQuery = newQuery.replace(VARIABLE_2, (comp.getIntroducedDate() == null ? "null" : "'"+comp.getIntroducedDate()+"'"));
-			newQuery = newQuery.replace(VARIABLE_3,(comp.getDiscontinuedDate() == null ? "null" : "'"+comp.getDiscontinuedDate()+"'"));
-			newQuery = newQuery.replace(VARIABLE_4,(comp.getCompany() == null ? "null" : comp.getCompany().getId().toString()));
-			stmt.executeUpdate(newQuery);
-			
-			stmt.close();
+			PreparedStatement query = connexion.prepareStatement(UPDATE);
+			query.setString(1, comp.getName());
+			query.setDate(2, comp.getIntroducedDate());
+			query.setDate(3, comp.getDiscontinuedDate());
+			if(comp.getCompany() == null)
+				query.setNull(4, 0); 
+			else
+				query.setInt(4, comp.getCompany().getId());
+			query.setInt(5, (int) comp.getId());
+			query.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
@@ -146,11 +140,9 @@ public class ComputerDAO {
 
 	public void delete(Computer comp) {
 		try (Connection connexion = ConnectionPool.getConnection()){
-			Statement stmt = connexion.createStatement();
-			
-			stmt.executeUpdate(DELETE.replaceFirst(VARIABLE_1, String.valueOf(comp.getId())));
-			
-			stmt.close();
+			PreparedStatement query = connexion.prepareStatement(DELETE);
+			query.setInt(1, (int) comp.getId());
+			query.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
