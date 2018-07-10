@@ -2,7 +2,6 @@ package com.excilys.computerdatabase.mapper;
 
 import java.sql.Date;
 
-import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.service.CompanyService;
 
@@ -17,17 +16,9 @@ public class ComputerMapper {
 		return INSTANCE;
 	}
 	
-	private Date getDate(String date) {
-		return date == "" ? null : Date.valueOf(date);
-	}
-	
-	private Company getCompany(String idCompany) {
-		return CompanyService.getInstance().get(Integer.parseInt(idCompany)).orElse(null);
-	}
-	
 	public Computer nom(String id, String name, String introduced, String discontinued, String idCompany) {
-		return new Computer.ComputerBuilder(name).withId(Long.parseLong(id)).withIntroducedDate(getDate(introduced))
-				.withDiscountedDate(getDate(discontinued))
-				.withCompany(getCompany(idCompany)).build();
+		return new Computer.ComputerBuilder(name).withId(Long.parseLong(id)).withIntroducedDate(introduced == "" ? null : Date.valueOf(introduced))
+				.withDiscountedDate(discontinued == "" ? null : Date.valueOf(discontinued))
+				.withCompany(CompanyService.getInstance().get(Integer.parseInt(idCompany)).orElse(null)).build();
 	}
 }

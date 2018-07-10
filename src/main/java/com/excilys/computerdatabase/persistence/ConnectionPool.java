@@ -16,10 +16,10 @@ public class ConnectionPool {
  
     static {
     	try {
-			Class.forName("com.mysql.jdbc.Driver");
-	        config.setJdbcUrl( "jdbc:mysql://localhost:3306/computer-database-db" );
-	        config.setUsername( "admincdb" );
-	        config.setPassword( "qwerty1234" );
+			Class.forName(ConfigDB.DRIVER);
+	        config.setJdbcUrl( ConfigDB.URL );
+	        config.setUsername( ConfigDB.USER_NAME );
+	        config.setPassword( ConfigDB.PASSWORD );
 	        config.addDataSourceProperty( "cachePrepStmts" , "true" );
 	        config.addDataSourceProperty( "prepStmtCacheSize" , "250" );
 	        config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
