@@ -19,15 +19,17 @@ public class EditComputer extends HttpServlet{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	private static CompanyService companyService = CompanyService.getInstance();
+	private static ComputerService computerService = ComputerService.getInstance();
+	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(Integer.parseInt(request.getParameter("computer")) > ComputerService.getInstance().get().size()){
+		if(Integer.parseInt(request.getParameter("computer")) > computerService.get().size()){
 			request.setAttribute("error", "This id is not in the database");
 			this.getServletContext().getRequestDispatcher( "/WEB-INF/views/500.jsp" ).forward( request, response );
 		} else {
 			try {
-				request.setAttribute("computer", ComputerService.getInstance().get(Integer.parseInt(request.getParameter("computer"))).get());
-				request.setAttribute("companies", CompanyService.getInstance().get());
+				request.setAttribute("computer", computerService.get(Integer.parseInt(request.getParameter("computer"))).get());
+				request.setAttribute("companies", companyService.get());
 				this.getServletContext().getRequestDispatcher( "/WEB-INF/views/editComputer.jsp" ).forward( request, response );
 			} catch (NumberFormatException e) {
 				request.setAttribute("error", e.getMessage());
@@ -38,9 +40,9 @@ public class EditComputer extends HttpServlet{
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(ComputerValidator.getInstance().checkComputer(request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId"))){
-			ComputerService.getInstance().update(ComputerMapper.getInstance().nom(request.getParameter("id"), request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId")));
-			request.setAttribute("computer", ComputerService.getInstance().get(Integer.parseInt(request.getParameter("computer"))).get());
-			request.setAttribute("companies", CompanyService.getInstance().get());
+			computerService.update(ComputerMapper.getInstance().nom(request.getParameter("id"), request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId")));
+			request.setAttribute("computer", computerService.get(Integer.parseInt(request.getParameter("computer"))).get());
+			request.setAttribute("companies", companyService.get());
 			this.getServletContext().getRequestDispatcher( "/WEB-INF/views/editComputer.jsp" ).forward( request, response );
 		} else {
 			request.setAttribute("error", "The computer was not updated. One or many fields were wrong.");

@@ -16,6 +16,7 @@ public class DeleteComputer extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static ComputerService computerService = ComputerService.getInstance();
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	}
@@ -23,7 +24,6 @@ public class DeleteComputer extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			String ids = request.getParameter("selection");
-			ComputerService computerService = ComputerService.getInstance();
 			int t = 0;
 			
 			while(ids.indexOf(",", t) >= 0){

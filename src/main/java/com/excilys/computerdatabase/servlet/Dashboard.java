@@ -19,9 +19,10 @@ public class Dashboard extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	private static ComputerService computerService = ComputerService.getInstance();
+	
 	private Integer pageRequest(HttpServletRequest request) {
-		ArrayList<Computer> computerList = ComputerService.getInstance().get();
+		ArrayList<Computer> computerList = computerService.get();
 		Integer page;
 		
 		if(request.getParameter("page")!=null){
@@ -41,7 +42,7 @@ public class Dashboard extends HttpServlet {
 	private ArrayList<Computer> searchRequest(String request) {
 		ArrayList<Computer> searchList = new ArrayList<Computer>();
 		
-		for (Computer computer : ComputerService.getInstance().get()) {
+		for (Computer computer : computerService.get()) {
 			if(computer.getName().toLowerCase().startsWith(request.toLowerCase()) || (computer.getCompany() != null && computer.getCompany().getName().toLowerCase().startsWith(request.toLowerCase())))
 				searchList.add(computer);
 		}
@@ -50,7 +51,6 @@ public class Dashboard extends HttpServlet {
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ComputerService computerService = ComputerService.getInstance();
 		ArrayList<Computer> computerList = computerService.get();
 		Page<Computer> page = new Page<Computer>();
 			
@@ -68,7 +68,6 @@ public class Dashboard extends HttpServlet {
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ComputerService computerService = ComputerService.getInstance();
 		ArrayList<Computer> computerList = computerService.get();
 		Page<Computer> page = new Page<Computer>();
 		
