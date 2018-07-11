@@ -33,7 +33,7 @@ public class DeleteComputer extends HttpServlet {
 			computerService.delete(computerService.get(Integer.parseInt(ids.substring(ids.lastIndexOf(',')+1, ids.length()))).get());
 			response.sendRedirect("dashboard");
 		} catch (NumberFormatException e) {
-			request.setAttribute("error", e.getMessage());
+			request.setAttribute("error", "Id of the computer is not recognized");
 			this.getServletContext().getRequestDispatcher( "/WEB-INF/views/500.jsp" ).forward( request, response );
 		}
 	}

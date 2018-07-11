@@ -11,6 +11,7 @@ import com.excilys.computerdatabase.mapper.ComputerMapper;
 import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
 import com.excilys.computerdatabase.validator.ComputerValidator;
+import com.excilys.computerdatabase.validator.IncorrectInputException;
 
 @WebServlet("/editComputer")
 public class EditComputer extends HttpServlet{
@@ -39,14 +40,15 @@ public class EditComputer extends HttpServlet{
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(ComputerValidator.getInstance().checkComputer(request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId"))){
+		try {
+			ComputerValidator.getInstance().checkComputer(request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId"));
 			computerService.update(ComputerMapper.getInstance().nom(request.getParameter("id"), request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId")));
 			request.setAttribute("computer", computerService.get(Integer.parseInt(request.getParameter("computer"))).get());
 			request.setAttribute("companies", companyService.get());
 			this.getServletContext().getRequestDispatcher( "/WEB-INF/views/editComputer.jsp" ).forward( request, response );
-		} else {
-			request.setAttribute("error", "The computer was not updated. One or many fields were wrong.");
+		} catch (IncorrectInputException e) {
+			request.setAttribute("error", e.getMessage());
 			this.getServletContext().getRequestDispatcher( "/WEB-INF/views/500.jsp" ).forward( request, response );
-		}
+		}		
 	}
 }
