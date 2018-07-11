@@ -59,6 +59,10 @@
 </section>
 
 <script src="js/verifForm.js"></script>
-
+<c:if test="${done == true}">
+	<script>
+		alert("The update has been done");
+	</script>
+</c:if>
 </body>
 </html>

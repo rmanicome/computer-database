@@ -45,6 +45,7 @@ public class EditComputer extends HttpServlet{
 			computerService.update(ComputerMapper.getInstance().nom(request.getParameter("id"), request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId")));
 			request.setAttribute("computer", computerService.get(Integer.parseInt(request.getParameter("computer"))).get());
 			request.setAttribute("companies", companyService.get());
+			request.setAttribute("done", true);
 			this.getServletContext().getRequestDispatcher( "/WEB-INF/views/editComputer.jsp" ).forward( request, response );
 		} catch (IncorrectInputException e) {
 			request.setAttribute("error", e.getMessage());
