@@ -5,7 +5,7 @@
 		<div class="row">
 			<div class="col-xs-8 col-xs-offset-2 box">
 				<h1>Add Computer</h1>
-				<form action="addComputer" method="POST" id="form" name="form" onsubmit="return verifForm();">
+				<form action="addComputer" method="POST" id="form" name="form" onsubmit="return confirm('Do you really want to submit the form?') && verifForm();">
 					<fieldset>
 						<div class="form-group">
 							<label for="computerName">Computer name</label> <input

@@ -7,7 +7,7 @@
 				<div class="label label-default pull-right">id: ${computer.id}</div>
 				<h1>Edit Computer</h1>
 
-				<form action="editComputer?computer=${computer.id}" method="POST" id="form" name="form" onsubmit="return verifForm();">
+				<form action="editComputer?computer=${computer.id}" method="POST" id="form" name="form" onsubmit="return confirm('Do you really want to submit the form?') && verifForm();">
 					<input type="hidden" value="${computer.id}" id="id" name="id"/>
 					<!-- TODO: Change this value with the computer id -->
 					<fieldset>
