@@ -20,8 +20,11 @@
 		<mockito.version>2.19.0</mockito.version>
 		<mysql.version>5.1.46</mysql.version>
 		<sl4j.version>1.7.25</sl4j.version>
-		<servlet.version>2.5</servlet.version>
+		<servlet.version>3.0.1</servlet.version>
 		<jstl.version>1.2</jstl.version>
+		<spring.version>5.0.7.RELEASE</spring.version>
+		<annotation.version>1.2</annotation.version>
+		<inject.version>1</inject.version>
 	</properties>
 
 	<dependencies>
@@ -66,6 +69,22 @@
 			<artifactId>HikariCP</artifactId>
 			<version>3.2.0</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>${annotation.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>${inject.version}</version>
 		</dependency>
 	</dependencies>
 

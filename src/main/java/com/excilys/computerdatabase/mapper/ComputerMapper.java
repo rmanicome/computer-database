@@ -2,9 +2,12 @@ package com.excilys.computerdatabase.mapper;
 
 import java.sql.Date;
 
+import javax.annotation.Resource;
+
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.service.CompanyService;
 
+@Resource
 public class ComputerMapper {
 	private final static ComputerMapper INSTANCE = new ComputerMapper();
 	

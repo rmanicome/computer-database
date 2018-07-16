@@ -10,9 +10,11 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.model.Company;
 
+@Repository("companyDAO")
 public class CompanyDAO {
 	final static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	private final static CompanyDAO INSTANCE = new CompanyDAO();

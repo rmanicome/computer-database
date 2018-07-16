@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.model.Page;
 import com.excilys.computerdatabase.service.ComputerService;
@@ -19,7 +21,8 @@ public class Dashboard extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static ComputerService computerService = ComputerService.getInstance();
+	@Autowired
+	private static ComputerService computerService;
 	
 	private Integer pageRequest(HttpServletRequest request) {
 		ArrayList<Computer> computerList = computerService.get();

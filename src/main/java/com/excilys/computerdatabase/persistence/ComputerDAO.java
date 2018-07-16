@@ -10,14 +10,21 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.model.Computer.ComputerBuilder;
 import com.excilys.computerdatabase.service.CompanyService;
 
+@Repository
+@Configuration
 public class ComputerDAO {
 	private final static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
 	private final static ComputerDAO INSTANCE = new ComputerDAO();
+	@Autowired
+	private static CompanyService companyService;
 	
 	private final static String GET_LIST = 
 			"SELECT "+ConstantBD.COMPUTER_ID+","
@@ -61,7 +68,6 @@ public class ComputerDAO {
 		ArrayList<Computer> computerList = new ArrayList<Computer>();
 		
 		try (Connection connexion = ConnectionPool.getConnection()){
-			CompanyService companyService = CompanyService.getInstance();
 			Statement stmt = connexion.createStatement();
 			ResultSet computers;
 			
@@ -85,7 +91,6 @@ public class ComputerDAO {
 	
 	public Optional<Computer> get(Integer id) {
 		try (Connection connexion = ConnectionPool.getConnection()){
-			CompanyService companyService = CompanyService.getInstance();
 			ResultSet computer;
 			
 			PreparedStatement query = connexion.prepareStatement(GET_BY_ID);

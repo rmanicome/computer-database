@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.excilys.computerdatabase.mapper.ComputerMapper;
 import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
@@ -20,8 +22,10 @@ public class EditComputer extends HttpServlet{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static CompanyService companyService = CompanyService.getInstance();
-	private static ComputerService computerService = ComputerService.getInstance();
+	@Autowired
+	private static CompanyService companyService;
+	@Autowired
+	private static ComputerService computerService;
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(Integer.parseInt(request.getParameter("computer")) > computerService.get().size()){

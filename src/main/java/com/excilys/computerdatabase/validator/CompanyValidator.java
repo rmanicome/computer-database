@@ -7,7 +7,7 @@ public class CompanyValidator {
 		
 	}
 	
-	public CompanyValidator getInstance() {
+	public static CompanyValidator getInstance() {
 		return INSTANCE;
 	}
 	
