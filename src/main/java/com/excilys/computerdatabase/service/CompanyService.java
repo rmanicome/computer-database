@@ -22,7 +22,7 @@ public class CompanyService {
 		return companyDAO.get(name);
 	}
 	
-	public Optional<Company> get(Integer id) {
+	public Optional<Company> get(Long id) {
 		return companyDAO.get(id);
 	}
 	

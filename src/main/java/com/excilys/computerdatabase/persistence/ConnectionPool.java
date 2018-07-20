@@ -39,4 +39,8 @@ public class ConnectionPool {
 	        return null;
 		}
     }
+    
+    public static HikariDataSource getDataSource() {
+    	return ds;
+    }
 }

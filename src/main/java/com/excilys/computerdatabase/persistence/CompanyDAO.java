@@ -11,7 +11,7 @@ import com.excilys.computerdatabase.model.Company;
 
 @Repository
 public class CompanyDAO {
-	private JdbcTemplate jdbcTemplate = new JdbcTemplate(ConfigDB.getDataSource());
+	private JdbcTemplate jdbcTemplate = new JdbcTemplate(ConnectionPool.getDataSource());
 	
 	private final static String GET = "SELECT "+ConstantBD.COMPANY_ID+","+ConstantBD.COMPANY_NAME+" FROM "+ConstantBD.COMPANY_TABLE+";";
 	private final static String GET_BY_NAME = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_NAME+" = ?;"; 
@@ -23,7 +23,7 @@ public class CompanyDAO {
 		ArrayList<Company> companyList = new ArrayList<Company>();
 		
 		for (Map<String, Object> company : jdbcTemplate.queryForList(GET)) {
-			companyList.add(new Company(((Long) company.get(ConstantBD.COMPANY_ID)).intValue(), (String) company.get(ConstantBD.COMPANY_NAME)));
+			companyList.add(new Company((Long) company.get(ConstantBD.COMPANY_ID), (String) company.get(ConstantBD.COMPANY_NAME)));
 		}
 		
 		return companyList;
@@ -35,11 +35,11 @@ public class CompanyDAO {
 		if(result.isEmpty())
 			return Optional.empty();
 		
-		return Optional.of(new Company(((Long) result.get(ConstantBD.COMPANY_ID)).intValue(),(String) result.get(ConstantBD.COMPANY_NAME)));
+		return Optional.of(new Company((Long) result.get(ConstantBD.COMPANY_ID),(String) result.get(ConstantBD.COMPANY_NAME)));
 	}
 	
-	public Optional<Company> get(Integer id) {
-		if(id == null || id == 0)
+	public Optional<Company> get(Long id) {
+		if(id == null)
 			return Optional.empty();
 		
 		Map<String, Object> result = jdbcTemplate.queryForMap(GET_BY_ID, id);
@@ -47,6 +47,6 @@ public class CompanyDAO {
 		if(result.isEmpty())
 			return Optional.empty();
 		
-		return Optional.of(new Company(((Long) result.get(ConstantBD.COMPANY_ID)).intValue(),(String) result.get(ConstantBD.COMPANY_NAME)));
+		return Optional.of(new Company((Long) result.get(ConstantBD.COMPANY_ID),(String) result.get(ConstantBD.COMPANY_NAME)));
 	}
 }

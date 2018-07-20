@@ -16,6 +16,6 @@ public class ComputerMapper {
 	public Computer nom(String id, String name, String introduced, String discontinued, String idCompany) {
 		return new Computer.ComputerBuilder(name).withId(Long.parseLong(id)).withIntroducedDate(introduced == "" ? null : Date.valueOf(introduced))
 				.withDiscountedDate(discontinued == "" ? null : Date.valueOf(discontinued))
-				.withCompany(companyService.get(Integer.parseInt(idCompany)).orElse(null)).build();
+				.withCompany(companyService.get(Long.parseLong(idCompany)).orElse(null)).build();
 	}
 }

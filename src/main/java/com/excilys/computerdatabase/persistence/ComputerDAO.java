@@ -16,7 +16,7 @@ import com.excilys.computerdatabase.service.CompanyService;
 
 @Repository
 public class ComputerDAO {
-	private JdbcTemplate jdbcTemplate = new JdbcTemplate(ConfigDB.getDataSource());
+	private JdbcTemplate jdbcTemplate = new JdbcTemplate(ConnectionPool.getDataSource());
 	@Autowired
 	private CompanyService companyService;
 	
@@ -58,7 +58,7 @@ public class ComputerDAO {
 					.withId((Long) computer.get(ConstantBD.COMPUTER_ID))
 					.withIntroducedDate((Date) computer.get(ConstantBD.COMPUTER_INTRODUCED))
 					.withDiscountedDate((Date) computer.get(ConstantBD.COMPUTER_DISCONTINUED))
-					.withCompany(computer.get(ConstantBD.COMPUTER_COMPANY_ID) == null ? null : (Company) companyService.get(((Long) computer.get(ConstantBD.COMPUTER_COMPANY_ID)).intValue()).orElse(null)).build());
+					.withCompany((Company) companyService.get((Long) computer.get(ConstantBD.COMPUTER_COMPANY_ID)).orElse(null)).build());
 		}
 	
 		return computerList;
@@ -71,7 +71,7 @@ public class ComputerDAO {
 				.withId((Long) result.get(ConstantBD.COMPUTER_ID))
 				.withIntroducedDate((Date) result.get(ConstantBD.COMPUTER_INTRODUCED))
 				.withDiscountedDate((Date) result.get(ConstantBD.COMPUTER_DISCONTINUED))
-				.withCompany(result.get(ConstantBD.COMPUTER_COMPANY_ID) == null ? null : (Company) companyService.get(((Long) result.get(ConstantBD.COMPUTER_COMPANY_ID)).intValue()).orElse(null)).build());
+				.withCompany((Company) companyService.get((Long) result.get(ConstantBD.COMPUTER_COMPANY_ID)).orElse(null)).build());
 	}
 
 	public void add(Computer comp) {
