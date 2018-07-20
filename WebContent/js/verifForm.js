@@ -19,7 +19,7 @@ function verifNomComputer(champ) {
 
 function verifIntroducedDate(champ) {
 	var date = new Date();
-	var today = date.getFullYear() + "-" + (date.getMonth() < 9 ? "0" : "") + (date.getMonth() + 1) + "-" + (date.getMonth() < 9 ? "0" : "")  + date.getDate();
+	var today = date.getFullYear() + "-" + (date.getMonth() < 9 ? "0" : "") + (date.getMonth() + 1) + "-" + (date.getDate() < 9 ? "0" : "")  + date.getDate();
 	if(champ.value > today){
 		document.getElementById("introducedError").style.display = "block";
 		surligne(champ,true);
@@ -33,7 +33,7 @@ function verifIntroducedDate(champ) {
 
 function verifDiscountedDate(introduced, champ){
 	var date = new Date();
-	var today = date.getFullYear() + "-" + (date.getMonth() < 9 ? "0" : "") + (date.getMonth() + 1) + "-" + (date.getMonth() < 9 ? "0" : "")  + date.getDate();
+	var today = date.getFullYear() + "-" + (date.getMonth() < 9 ? "0" : "") + (date.getMonth() + 1) + "-" + (date.getDate() < 9 ? "0" : "")  + date.getDate();
 	if(champ.value!="" && champ.value <= introduced.value){
 		document.getElementById("discontinuedText").innerHTML = "The discontinued date can't be before the introduced date";
 		document.getElementById("discontinuedError").style.display = "block";
