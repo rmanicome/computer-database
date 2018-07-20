@@ -55,7 +55,7 @@ public class ComputerValidator {
 	
 	private void checkCompanyId(String id) throws IncorrectInputException {
 		if(id != null && Integer.parseInt(id) != 0){
-			if(!id.matches("[1-9][0-9]*") || !companyService.get(Integer.parseInt(id)).isPresent())
+			if(!id.matches("[1-9][0-9]*") || !companyService.get(Long.parseLong(id)).isPresent())
 				throw new IncorrectInputException("The application encountered an error with the company service");
 		}
 	}
