@@ -1,25 +1,22 @@
 package com.excilys.computerdatabase.persistence;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.model.Computer.ComputerBuilder;
 import com.excilys.computerdatabase.service.CompanyService;
 
 @Repository
 public class ComputerDAO {
-	private final static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
+	private JdbcTemplate jdbcTemplate = new JdbcTemplate(ConfigDB.getDataSource());
 	@Autowired
 	private CompanyService companyService;
 	
@@ -56,90 +53,47 @@ public class ComputerDAO {
 	public ArrayList<Computer> get(){
 		ArrayList<Computer> computerList = new ArrayList<Computer>();
 		
-		try (Connection connexion = ConnectionPool.getConnection()){
-			Statement stmt = connexion.createStatement();
-			ResultSet computers;
-			
-			computers = stmt.executeQuery(GET_LIST);
-			while(computers.next()){
-				computerList.add(new ComputerBuilder(computers.getString(2))
-						.withId(computers.getLong(1))
-						.withIntroducedDate(computers.getDate(3))
-						.withDiscountedDate(computers.getDate(4))
-						.withCompany(companyService.get(computers.getInt(5)).orElse(null)).build());
-			}
-			
-			stmt.close();
-			
-			return computerList;
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			return computerList;
+		for (Map<String, Object> computer : jdbcTemplate.queryForList(GET_LIST)) {
+			computerList.add(new ComputerBuilder((String) computer.get(ConstantBD.COMPANY_NAME))
+					.withId((Long) computer.get(ConstantBD.COMPUTER_ID))
+					.withIntroducedDate((Date) computer.get(ConstantBD.COMPUTER_INTRODUCED))
+					.withDiscountedDate((Date) computer.get(ConstantBD.COMPUTER_DISCONTINUED))
+					.withCompany(computer.get(ConstantBD.COMPUTER_COMPANY_ID) == null ? null : (Company) companyService.get(((Long) computer.get(ConstantBD.COMPUTER_COMPANY_ID)).intValue()).orElse(null)).build());
 		}
+	
+		return computerList;
 	}
 	
 	public Optional<Computer> get(Integer id) {
-		try (Connection connexion = ConnectionPool.getConnection()){
-			ResultSet computer;
-			
-			PreparedStatement query = connexion.prepareStatement(GET_BY_ID);
-			query.setInt(1, id);
-			computer = query.executeQuery();
-			computer.next();
-			
-			return Optional.of(new ComputerBuilder(computer.getString(2))
-					.withId(computer.getLong(1))
-					.withIntroducedDate(computer.getDate(3))
-					.withDiscountedDate(computer.getDate(4))
-					.withCompany(companyService.get(computer.getInt(5)).orElse(null)).build());
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			return Optional.empty();
-		}
+		Map<String, Object> result = jdbcTemplate.queryForMap(GET_BY_ID, id);
+		
+		return Optional.of(new ComputerBuilder((String) result.get(ConstantBD.COMPANY_NAME))
+				.withId((Long) result.get(ConstantBD.COMPUTER_ID))
+				.withIntroducedDate((Date) result.get(ConstantBD.COMPUTER_INTRODUCED))
+				.withDiscountedDate((Date) result.get(ConstantBD.COMPUTER_DISCONTINUED))
+				.withCompany(result.get(ConstantBD.COMPUTER_COMPANY_ID) == null ? null : (Company) companyService.get(((Long) result.get(ConstantBD.COMPUTER_COMPANY_ID)).intValue()).orElse(null)).build());
 	}
 
 	public void add(Computer comp) {
-		try (Connection connexion = ConnectionPool.getConnection()){
-			PreparedStatement query = connexion.prepareStatement(ADD);
-			query.setInt(1, (int) comp.getId());
-			query.setString(2, comp.getName());
-			query.setDate(3, comp.getIntroducedDate());
-			query.setDate(4, comp.getDiscontinuedDate());
-			if(comp.getCompany() != null)
-				query.setInt(5,comp.getCompany().getId());
-			else
-				query.setNull(5, 0);
-			query.executeUpdate();
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-		}
+		jdbcTemplate.update(ADD, 
+				comp.getId(), 
+				comp.getName(), 
+				comp.getIntroducedDate(), 
+				comp.getDiscontinuedDate(), 
+				comp.getCompany() != null ? comp.getCompany().getId() : 0);
 	}
 
 	public void update(Computer comp) {
-		try (Connection connexion = ConnectionPool.getConnection()){
-			PreparedStatement query = connexion.prepareStatement(UPDATE);
-			query.setString(1, comp.getName());
-			query.setDate(2, comp.getIntroducedDate());
-			query.setDate(3, comp.getDiscontinuedDate());
-			if(comp.getCompany() == null)
-				query.setNull(4, 0); 
-			else
-				query.setInt(4, comp.getCompany().getId());
-			query.setInt(5, (int) comp.getId());
-			query.executeUpdate();
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-		}
+		jdbcTemplate.update(UPDATE, 
+				comp.getName(), 
+				comp.getIntroducedDate(), 
+				comp.getDiscontinuedDate(), 
+				comp.getCompany() != null ? comp.getCompany().getId() : 0,
+				comp.getId());
 	}
 
 	public void delete(Computer comp) {
-		try (Connection connexion = ConnectionPool.getConnection()){
-			PreparedStatement query = connexion.prepareStatement(DELETE);
-			query.setInt(1, (int) comp.getId());
-			query.executeUpdate();
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-		}
+		jdbcTemplate.update(DELETE, comp.getId());
 	}
 
 }
