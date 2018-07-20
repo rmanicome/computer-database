@@ -14,24 +14,15 @@ import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.model.Company;
 
-@Repository("companyDAO")
+@Repository
 public class CompanyDAO {
 	final static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
-	private final static CompanyDAO INSTANCE = new CompanyDAO();
 		
 	private final static String GET = "SELECT "+ConstantBD.COMPANY_ID+","+ConstantBD.COMPANY_NAME+" FROM "+ConstantBD.COMPANY_TABLE+";";
 	private final static String GET_BY_NAME = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_NAME+" = ?;"; 
 	private final static String GET_BY_ID = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = ?;";
 	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = ?;";
 	private final static String DELETE_COMPUTER = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_COMPANY_ID+" = ?;";
-	
-	private CompanyDAO(){
-		
-	}
-	
-	public static CompanyDAO getInstance() {
-		return INSTANCE;
-	}
 	
 	public ArrayList<Company> get() {
 		ArrayList<Company> companyList = new ArrayList<Company>();

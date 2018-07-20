@@ -4,19 +4,16 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.excilys.computerdatabase.service.CompanyService;
 
+@Component
 public class ComputerValidator {
-	private final static ComputerValidator INSTANCE = new ComputerValidator();
 	private final static String SEPARATOR = "-";
-	
-	private ComputerValidator() {
-		
-	}
-	
-	public static ComputerValidator getInstance() {
-		return INSTANCE;
-	}
+	@Autowired
+	private CompanyService companyService;
 	
 	private void checkName(String name) throws IncorrectInputException {
 		if(name.length() < 1) 
@@ -58,7 +55,7 @@ public class ComputerValidator {
 	
 	private void checkCompanyId(String id) throws IncorrectInputException {
 		if(id != null && Integer.parseInt(id) != 0){
-			if(!id.matches("[1-9][0-9]*") || !CompanyService.getInstance().get(Integer.parseInt(id)).isPresent())
+			if(!id.matches("[1-9][0-9]*") || !companyService.get(Integer.parseInt(id)).isPresent())
 				throw new IncorrectInputException("The application encountered an error with the company service");
 		}
 	}

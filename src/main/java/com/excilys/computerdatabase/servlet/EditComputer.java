@@ -1,6 +1,8 @@
 package com.excilys.computerdatabase.servlet;
 
 import java.io.IOException;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.computerdatabase.mapper.ComputerMapper;
 import com.excilys.computerdatabase.service.CompanyService;
@@ -23,10 +26,20 @@ public class EditComputer extends HttpServlet{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Autowired
-	private static CompanyService companyService;
+	private CompanyService companyService;
 	@Autowired
-	private static ComputerService computerService;
-	
+	private ComputerService computerService;
+	@Autowired
+	private ComputerValidator computerValidator;
+	@Autowired
+	private ComputerMapper computerMapper;
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+	}
+		
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(Integer.parseInt(request.getParameter("computer")) > computerService.get().size()){
 			request.setAttribute("error", "This id is not in the database");
@@ -45,8 +58,8 @@ public class EditComputer extends HttpServlet{
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			ComputerValidator.getInstance().checkComputer(request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId"));
-			computerService.update(ComputerMapper.getInstance().nom(request.getParameter("id"), request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId")));
+			computerValidator.checkComputer(request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId"));
+			computerService.update(computerMapper.nom(request.getParameter("id"), request.getParameter("computerName"), request.getParameter("introduced"), request.getParameter("discontinued"), request.getParameter("companyId")));
 			request.setAttribute("computer", computerService.get(Integer.parseInt(request.getParameter("computer"))).get());
 			request.setAttribute("companies", companyService.get());
 			request.setAttribute("done", true);

@@ -14,17 +14,17 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
-		<junit.version>4.11</junit.version>
-		<mockito.version>2.19.0</mockito.version>
-		<mysql.version>5.1.46</mysql.version>
-		<sl4j.version>1.7.25</sl4j.version>
-		<servlet.version>3.0.1</servlet.version>
-		<jstl.version>1.2</jstl.version>
-		<spring.version>5.0.7.RELEASE</spring.version>
-		<annotation.version>1.2</annotation.version>
-		<inject.version>1</inject.version>
+		<maven.compiler.source>	1.7				</maven.compiler.source>
+		<maven.compiler.target>	1.7				</maven.compiler.target>
+		<junit.version>			4.11			</junit.version>
+		<mockito.version>		2.19.0			</mockito.version>
+		<mysql.version>			5.1.46			</mysql.version>
+		<sl4j.version>			1.7.25			</sl4j.version>
+		<servlet.version>		3.0.1			</servlet.version>
+		<jstl.version>			1.2				</jstl.version>
+		<spring.version>		5.0.7.RELEASE	</spring.version>
+		<annotation.version>	1.2				</annotation.version>
+		<inject.version>		1				</inject.version>
 	</properties>
 
 	<dependencies>
@@ -56,8 +56,9 @@
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
+			<artifactId>javax.servlet-api</artifactId>
 			<version>${servlet.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>jstl</groupId>
@@ -75,6 +76,11 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.annotation</groupId>

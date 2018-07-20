@@ -2,6 +2,8 @@ package com.excilys.computerdatabase.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.model.Page;
@@ -22,12 +25,17 @@ public class Dashboard extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Autowired
-	private static ComputerService computerService;
+	private ComputerService computerService;
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+	}
 	
 	private Integer pageRequest(HttpServletRequest request) {
 		ArrayList<Computer> computerList = computerService.get();
 		Integer page;
-		
 		if(request.getParameter("page")!=null){
 			if(Integer.parseInt(request.getParameter("page")) < computerList.size() / Page.getMaxComputerPerPage() + (computerList.size() % Page.getMaxComputerPerPage() == 0 ? 0 : 1))
 				page = Integer.parseInt(request.getParameter("page"));
@@ -38,13 +46,11 @@ public class Dashboard extends HttpServlet {
 			page = 1;
 			Page.setPageNumber(page-1);
 		}
-		
 		return page;
 	}
 	
 	private ArrayList<Computer> searchRequest(String request) {
 		ArrayList<Computer> searchList = new ArrayList<Computer>();
-		
 		for (Computer computer : computerService.get()) {
 			if(computer.getName().toLowerCase().startsWith(request.toLowerCase()) || (computer.getCompany() != null && computer.getCompany().getName().toLowerCase().startsWith(request.toLowerCase())))
 				searchList.add(computer);

@@ -1,16 +1,9 @@
 package com.excilys.computerdatabase.validator;
 
-public class CompanyValidator {
-	private final static CompanyValidator INSTANCE = new CompanyValidator();
+import org.springframework.stereotype.Component;
 
-	private CompanyValidator() {
-		
-	}
-	
-	public static CompanyValidator getInstance() {
-		return INSTANCE;
-	}
-	
+@Component
+public class CompanyValidator {
 	public Boolean checkCompany(String name) {
 		return name.length() > 1 && !name.contains(",") && !name.contains("'") && !name.contains(";");
 	}

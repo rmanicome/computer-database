@@ -11,7 +11,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.model.Computer;
@@ -19,12 +18,10 @@ import com.excilys.computerdatabase.model.Computer.ComputerBuilder;
 import com.excilys.computerdatabase.service.CompanyService;
 
 @Repository
-@Configuration
 public class ComputerDAO {
 	private final static Logger logger = LoggerFactory.getLogger(ComputerDAO.class);
-	private final static ComputerDAO INSTANCE = new ComputerDAO();
 	@Autowired
-	private static CompanyService companyService;
+	private CompanyService companyService;
 	
 	private final static String GET_LIST = 
 			"SELECT "+ConstantBD.COMPUTER_ID+","
@@ -55,15 +52,7 @@ public class ComputerDAO {
 					+ConstantBD.COMPUTER_DISCONTINUED+" = ?, "
 					+ConstantBD.COMPUTER_COMPANY_ID+" = ? WHERE "+ConstantBD.COMPUTER_ID+" = ?;";
 	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+" = ?;";
-	
-	private ComputerDAO(){
-		
-	}
-	
-	public static ComputerDAO getInstance(){
-		return INSTANCE;
-	}
-	
+
 	public ArrayList<Computer> get(){
 		ArrayList<Computer> computerList = new ArrayList<Computer>();
 		

@@ -3,8 +3,7 @@ package com.excilys.computerdatabase.service;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.excilys.computerdatabase.model.Company;
@@ -12,17 +11,8 @@ import com.excilys.computerdatabase.persistence.CompanyDAO;
 
 @Service
 public class CompanyService {
-	private final static CompanyService INSTANCE = new CompanyService();
-	@Resource(name="companyDAO")
+	@Autowired
 	private CompanyDAO companyDAO;
-	
-	private CompanyService() {
-
-	}
-	
-	public static CompanyService getInstance() {
-		return INSTANCE;
-	}
 	
 	public ArrayList<Company> get() {
 		return companyDAO.get();
