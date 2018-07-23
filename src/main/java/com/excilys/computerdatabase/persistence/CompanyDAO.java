@@ -1,8 +1,12 @@
 package com.excilys.computerdatabase.persistence;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -11,13 +15,14 @@ import com.excilys.computerdatabase.model.Company;
 
 @Repository
 public class CompanyDAO {
+	final static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
 	private JdbcTemplate jdbcTemplate = new JdbcTemplate(ConnectionPool.getDataSource());
 	
 	private final static String GET = "SELECT "+ConstantBD.COMPANY_ID+","+ConstantBD.COMPANY_NAME+" FROM "+ConstantBD.COMPANY_TABLE+";";
 	private final static String GET_BY_NAME = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_NAME+" = ?;"; 
 	private final static String GET_BY_ID = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = ?;";
-	//private final static String DELETE = "DELETE FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = ?;";
-	//private final static String DELETE_COMPUTER = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_COMPANY_ID+" = ?;";
+	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = ?;";
+	private final static String DELETE_COMPUTER = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_COMPANY_ID+" = ?;";
 	
 	public ArrayList<Company> get() {
 		ArrayList<Company> companyList = new ArrayList<Company>();
@@ -48,5 +53,17 @@ public class CompanyDAO {
 			return Optional.empty();
 		
 		return Optional.of(new Company((Long) result.get(ConstantBD.COMPANY_ID),(String) result.get(ConstantBD.COMPANY_NAME)));
+	}
+	
+	public void delete(Long id) {
+		try {
+			jdbcTemplate.getDataSource().getConnection().setAutoCommit(false);
+			jdbcTemplate.update(DELETE, id);
+			jdbcTemplate.update(DELETE_COMPUTER, id);
+			jdbcTemplate.getDataSource().getConnection().commit();
+			jdbcTemplate.getDataSource().getConnection().setAutoCommit(true);
+		} catch (SQLException e) {
+			logger.error("Erreur lors de la deletion de companie. Une erreur est intervenue lors de l'acces à la base de données");
+		}
 	}
 }

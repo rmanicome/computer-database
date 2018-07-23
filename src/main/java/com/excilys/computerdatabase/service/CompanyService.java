@@ -26,7 +26,7 @@ public class CompanyService {
 		return companyDAO.get(id);
 	}
 	
-	/*public void delete(Company company){
+	public void delete(Company company){
 		companyDAO.delete(company.getId());
-	}*/
+	}
 }
