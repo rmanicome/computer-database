@@ -12,16 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.model.Page;
-import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
 
 @Controller
 @RequestMapping(ControllerConstant.HOME)
-public class ApplicationController {
+public class DashboardController {
 	@Autowired
 	private ComputerService computerService;
-	@Autowired
-	private CompanyService companyService;
 	
 	@GetMapping(ControllerConstant.DASHBOARD)
 	public String showComputers(ModelMap model, @RequestParam(name="page", required=false, defaultValue="1") String pageString, @RequestParam(name="search", required=false) String search) {
@@ -65,12 +62,5 @@ public class ApplicationController {
 		model.addAttribute("pageMax", computerList.size() / page.getMaxComputerPerPage() + (computerList.size() % page.getMaxComputerPerPage() == 0 ? 0 : 1));
 		
 		return ControllerConstant.DASHBOARD;
-	}
-	
-	@GetMapping(ControllerConstant.ADD_COMPUTER)
-	public String addComputer(ModelMap model) {
-		model.addAttribute(ControllerConstant.COMPANIE_RESOURCES, companyService.get());
-		
-		return ControllerConstant.ADD_COMPUTER;
 	}
 }

@@ -36,12 +36,11 @@ public class ComputerDAO {
 			" FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+"= ?;";
 	private final static String ADD = 
 			"INSERT INTO "+ConstantBD.COMPUTER_TABLE+" ("
-					+ConstantBD.COMPUTER_ID+","
 					+ConstantBD.COMPUTER_NAME+","
 					+ConstantBD.COMPUTER_INTRODUCED+","
 					+ConstantBD.COMPUTER_DISCONTINUED+","
 					+ConstantBD.COMPUTER_COMPANY_ID+") "
-			+ "values (?, ?, ?, ?, ?);";
+			+ "values (?, ?, ?, ?);";
 	private final static String UPDATE = 
 			"UPDATE "+ConstantBD.COMPUTER_TABLE+
 			" SET "+ConstantBD.COMPUTER_NAME+" = ?, "
@@ -75,12 +74,11 @@ public class ComputerDAO {
 	}
 
 	public void add(Computer comp) {
-		jdbcTemplate.update(ADD, 
-				comp.getId(), 
+		jdbcTemplate.update(ADD,
 				comp.getName(), 
 				comp.getIntroducedDate(), 
 				comp.getDiscontinuedDate(), 
-				comp.getCompany() != null ? comp.getCompany().getId() : 0);
+				comp.getCompany() != null ? comp.getCompany().getId() : null);
 	}
 
 	public void update(Computer comp) {
@@ -88,7 +86,7 @@ public class ComputerDAO {
 				comp.getName(), 
 				comp.getIntroducedDate(), 
 				comp.getDiscontinuedDate(), 
-				comp.getCompany() != null ? comp.getCompany().getId() : 0,
+				comp.getCompany() != null ? comp.getCompany().getId() : null,
 				comp.getId());
 	}
 

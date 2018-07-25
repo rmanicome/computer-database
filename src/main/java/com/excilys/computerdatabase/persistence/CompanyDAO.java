@@ -44,7 +44,7 @@ public class CompanyDAO {
 	}
 	
 	public Optional<Company> get(Long id) {
-		if(id == null)
+		if(id == null || id==0)
 			return Optional.empty();
 		
 		Map<String, Object> result = jdbcTemplate.queryForMap(GET_BY_ID, id);

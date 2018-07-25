@@ -13,7 +13,7 @@ public class ComputerMapper {
 	@Autowired
 	private CompanyService companyService;
 	
-	public Computer nom(String id, String name, String introduced, String discontinued, String idCompany) {
+	public Computer buildComputer(String id, String name, String introduced, String discontinued, String idCompany) {
 		return new Computer.ComputerBuilder(name).withId(Long.parseLong(id)).withIntroducedDate(introduced == "" ? null : Date.valueOf(introduced))
 				.withDiscountedDate(discontinued == "" ? null : Date.valueOf(discontinued))
 				.withCompany(companyService.get(Long.parseLong(idCompany)).orElse(null)).build();
