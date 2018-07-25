@@ -1,19 +1,23 @@
 package com.excilys.computerdatabase.configuration;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import com.excilys.computerdatabase.controller.ControllerConstant;
 
-public class ConfigServletsContextSpring implements WebApplicationInitializer {
+public class ConfigServletsContextSpring extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override
-	public void onStartup(ServletContext container) throws ServletException {
-	      AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-	      rootContext.register(Application.class);
-	      container.addListener(new ContextLoaderListener(rootContext));
-	      rootContext.refresh();
+	protected Class<?>[] getRootConfigClasses() {
+		return new Class [] {Application.class};
+	}
+
+	@Override
+	protected Class<?>[] getServletConfigClasses() {
+		return new Class [] {SpringMVCConfig.class};
+	}
+
+	@Override
+	protected String[] getServletMappings() {
+		return new String[] {ControllerConstant.HOME};
 	}
 }

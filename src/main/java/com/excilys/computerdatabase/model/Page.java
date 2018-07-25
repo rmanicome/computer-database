@@ -8,7 +8,7 @@ public class Page<T> {
 	private static Integer maxComputerPerPage = 50;
 	private static Integer pageNumber = 0;
 
-	public static int getMaxComputerPerPage() {
+	public int getMaxComputerPerPage() {
 		return maxComputerPerPage;
 	}
 	

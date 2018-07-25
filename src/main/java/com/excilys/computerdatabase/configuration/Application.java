@@ -9,5 +9,5 @@ import org.springframework.context.annotation.Configuration;
 		"com.excilys.computerdatabase.service",
 		"com.excilys.computerdatabase.persistence"})
 public class Application {
-	
+		
 }
