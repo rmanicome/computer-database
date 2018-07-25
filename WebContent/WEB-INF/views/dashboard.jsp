@@ -1,22 +1,22 @@
 <jsp:include page="head.jsp" />
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <section id="main">
 	<div class="container">
-		<h1 id="homeTitle">${size} Computers found</h1>
+		<h1 id="homeTitle">${size} <spring:message code="dashboardText"/></h1>
 		<div id="actions" class="form-horizontal">
 			<div class="pull-left">
 				<form id="searchForm" action="dashboard" method="GET" class="form-inline">
 
 					<input type="search" id="searchbox" name="search"
-						class="form-control" placeholder="Search name" value="${search}"/> 
-					<input type="submit" id="searchsubmit" value="Filter by name"
+						class="form-control" placeholder="<spring:message code="search"/>" value="${search}"/> 
+					<input type="submit" id="searchsubmit" value="<spring:message code="filter"/>"
 						class="btn btn-primary" />
 				</form>
 			</div>
 			<div class="pull-right">
-				<a class="btn btn-success" id="addComputer" href="addComputer">Add
-					Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-					onclick="$.fn.toggleEditMode();">Edit</a>
+				<a class="btn btn-success" id="addComputer" href="addComputer"><spring:message code="addComputer"/></a> <a class="btn btn-default" id="editComputer" href="#"
+					onclick="$.fn.toggleEditMode();"><spring:message code="edit"/></a>
 			</div>
 		</div>
 	</div>
@@ -39,12 +39,12 @@
 								class="fa fa-trash-o fa-lg"></i>
 						</a>
 					</span></th>
-					<th>Computer name</th>
-					<th>Introduced date</th>
+					<th><spring:message code="computerName"/></th>
+					<th><spring:message code="introducedDate"/></th>
 					<!-- Table header for Discontinued Date -->
-					<th>Discontinued date</th>
+					<th><spring:message code="discontinuedDate"/></th>
 					<!-- Table header for Company -->
-					<th>Company</th>
+					<th><spring:message code="company"/></th>
 
 				</tr>
 			</thead>
