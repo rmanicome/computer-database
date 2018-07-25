@@ -35,17 +35,18 @@ function verifDiscountedDate(introduced, champ){
 	var date = new Date();
 	var today = date.getFullYear() + "-" + (date.getMonth() < 9 ? "0" : "") + (date.getMonth() + 1) + "-" + (date.getDate() < 9 ? "0" : "")  + date.getDate();
 	if(champ.value!="" && champ.value <= introduced.value){
-		document.getElementById("discontinuedText").innerHTML = "The discontinued date can't be before the introduced date";
-		document.getElementById("discontinuedError").style.display = "block";
+		document.getElementById("discontinuedTodayError").style.display = "none";
+		document.getElementById("discontinuedIntroError").style.display = "block";
 		surligne(champ,true);
 		return false;
 	} else if(champ.value > today) {
-		document.getElementById("discontinuedText").innerHTML = "The discontinued date can't be after today's date";
-		document.getElementById("discontinuedError").style.display = "block";
+		document.getElementById("discontinuedIntroError").style.display = "none";
+		document.getElementById("discontinuedTodayError").style.display = "block";
 		surligne(champ,true);
 		return false;
 	} else {
-		document.getElementById("discontinuedError").style.display = "none";
+		document.getElementById("discontinuedIntroError").style.display = "none";
+		document.getElementById("discontinuedTodayError").style.display = "none";
 		surligne(champ,false);
 		return true;
 	}

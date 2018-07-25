@@ -29,8 +29,11 @@
 								type="date" class="form-control" id="discontinued" name="discontinued"
 								placeholder="<spring:message code="discontinuedDate"/>" onblur="verifDiscountedDate(document.getElementById('introduced'),this)">
 						</div>
-						<div id="discontinuedError" style="display:none;">
-								<p id="discontinuedText">The discontinued date is incorrect</p>
+						<div id="discontinuedIntroError" style="display:none;">
+								<p id="discontinuedText"><spring:message code="errorDisconIntro"/></p>
+						</div>
+						<div id="discontinuedTodayError" style="display:none;">
+								<p id="discontinuedText"><spring:message code="errorDisconToday"/></p>
 						</div>
 						<div class="form-group">
 							<label for="companyId"><spring:message code="company"/></label> <select
