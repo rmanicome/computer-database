@@ -14,5 +14,9 @@
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<a class="navbar-brand" href="dashboard"> Application - <spring:message code="applicationName"/> </a>
+			 <a class="navbar-brand pull-right" href="?lang=<spring:message code="alter_language"/>">
+			<img src="images/flag_<spring:message code="alter_language"/>.png"
+			style="height:50px;width:50px;margin:-15px;" alt="change language icon" />
+			</a>
 		</div>
 	</header>
