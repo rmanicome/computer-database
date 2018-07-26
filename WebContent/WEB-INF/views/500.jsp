@@ -1,9 +1,10 @@
 <jsp:include page="head.jsp" />
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <section id="main">
 	<div class="container">
 		<div class="alert alert-danger">
-			Error 500: An error has occured! <br />
-			${error}
+			<spring:message code="error.500"/> <br />
+			${param.error}
 			<!-- stacktrace -->
 		</div>
 	</div>

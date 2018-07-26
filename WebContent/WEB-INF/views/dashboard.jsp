@@ -1,6 +1,7 @@
 <jsp:include page="head.jsp" />
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page pageEncoding="UTF-8" %>
 <section id="main">
 	<div class="container">
 		<h1 id="homeTitle">${size} <spring:message code="dashboardText"/></h1>

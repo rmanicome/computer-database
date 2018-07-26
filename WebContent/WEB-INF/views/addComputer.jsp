@@ -1,6 +1,7 @@
 <jsp:include page="head.jsp" />
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page pageEncoding="UTF-8" %>
 <section id="main">
 	<div class="container">
 		<div class="row">
@@ -14,7 +15,7 @@
 								placeholder="<spring:message code="computerName"/>" onblur="verifNomComputer(this)">
 						</div>
 						<div id="nameError" style="display:none;">
-							<p><spring:message code="errorName"/></p>
+							<p><spring:message code="error.name"/></p>
 						</div>
 						<div class="form-group">
 							<label for="introduced"><spring:message code="introducedDate"/></label> <input
@@ -22,7 +23,7 @@
 								placeholder="<spring:message code="introducedDate"/>" onblur="verifIntroducedDate(this) & verifDiscountedDate(this, document.getElementById('discontinued'))">		
 						</div>
 						<div id="introducedError" style="display:none;">
-								<p><spring:message code="errorIntroduced"/></p>
+								<p><spring:message code="error.introduced"/></p>
 						</div>
 						<div class="form-group">
 							<label for="discontinued"><spring:message code="discontinuedDate"/></label> <input
@@ -30,10 +31,10 @@
 								placeholder="<spring:message code="discontinuedDate"/>" onblur="verifDiscountedDate(document.getElementById('introduced'),this)">
 						</div>
 						<div id="discontinuedIntroError" style="display:none;">
-								<p id="discontinuedText"><spring:message code="errorDisconIntro"/></p>
+								<p id="discontinuedText"><spring:message code="error.discontinued.introduced"/></p>
 						</div>
 						<div id="discontinuedTodayError" style="display:none;">
-								<p id="discontinuedText"><spring:message code="errorDisconToday"/></p>
+								<p id="discontinuedText"><spring:message code="error.discontinued.today"/></p>
 						</div>
 						<div class="form-group">
 							<label for="companyId"><spring:message code="company"/></label> <select
