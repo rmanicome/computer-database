@@ -1,62 +1,67 @@
 package com.excilys.computerdatabase.persistence;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.excilys.computerdatabase.configuration.HibernateConfiguration;
 import com.excilys.computerdatabase.model.Company;
 
 @Repository
 public class CompanyDAO {
-	final static Logger logger = LoggerFactory.getLogger(CompanyDAO.class);
-	private JdbcTemplate jdbcTemplate = new JdbcTemplate(ConnectionPool.getDataSource());
-	
-	private final static String GET = "SELECT "+ConstantBD.COMPANY_ID+","+ConstantBD.COMPANY_NAME+" FROM "+ConstantBD.COMPANY_TABLE+";";
-	private final static String GET_BY_NAME = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_NAME+" = ?;"; 
-	private final static String GET_BY_ID = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = ?;";
-	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = ?;";
-	private final static String DELETE_COMPUTER = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_COMPANY_ID+" = ?;";
 	
 	public ArrayList<Company> get() {
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(ConnectionPool.getDataSource());
 		ArrayList<Company> companyList = new ArrayList<Company>();
 		
-		for (Map<String, Object> company : jdbcTemplate.queryForList(GET)) {
+		for (Map<String, Object> company : jdbcTemplate.queryForList("SELECT "+ConstantBD.COMPANY_ID+","+ConstantBD.COMPANY_NAME+" FROM "+ConstantBD.COMPANY_TABLE+";")) {
 			companyList.add(new Company((Long) company.get(ConstantBD.COMPANY_ID), (String) company.get(ConstantBD.COMPANY_NAME)));
 		}
 		
 		return companyList;
+		/*Session session = HibernateConfiguration.getSession();
+		
+		session.beginTransaction();
+		Query<Company> query = session.createQuery("from company");
+		
+		ArrayList<Company> companyList = new ArrayList<Company>();
+		
+		System.out.println(query.getQueryString());
+		/*for (Company company : query.getResultList()) {
+			companyList.add(company);
+		}*/
+		
+		//return companyList;
 	}
 	
 	public Optional<Company> get(String name) {
-		Map<String, Object> result = jdbcTemplate.queryForMap(GET_BY_NAME, name);
-		 
-		if(result.isEmpty())
-			return Optional.empty();
+		Session session = HibernateConfiguration.getSession();
 		
-		return Optional.of(new Company((Long) result.get(ConstantBD.COMPANY_ID),(String) result.get(ConstantBD.COMPANY_NAME)));
+		session.beginTransaction();
+		Query<Company> query = session.createQuery("from company where name= :name");
+		query.setParameter("name", name);
+		
+		return query.uniqueResultOptional();
+		
 	}
 	
 	public Optional<Company> get(Long id) {
-		if(id == null || id==0)
-			return Optional.empty();
+		Session session = HibernateConfiguration.getSession();
 		
-		Map<String, Object> result = jdbcTemplate.queryForMap(GET_BY_ID, id);
+		session.beginTransaction();
+		Query<Company> query = session.createQuery("from company where name= :id");
+		query.setParameter("id", id);
 		
-		if(result.isEmpty())
-			return Optional.empty();
-		
-		return Optional.of(new Company((Long) result.get(ConstantBD.COMPANY_ID),(String) result.get(ConstantBD.COMPANY_NAME)));
+		return query.uniqueResultOptional();
 	}
 	
 	public void delete(Long id) {
-		try {
+		/*try {
 			jdbcTemplate.getDataSource().getConnection().setAutoCommit(false);
 			jdbcTemplate.update(DELETE, id);
 			jdbcTemplate.update(DELETE_COMPUTER, id);
@@ -64,6 +69,6 @@ public class CompanyDAO {
 			jdbcTemplate.getDataSource().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
 			logger.error("Erreur lors de la deletion de companie. Une erreur est intervenue lors de l'acces à la base de données");
-		}
+		}*/
 	}
 }

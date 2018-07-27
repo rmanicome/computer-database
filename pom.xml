@@ -22,10 +22,13 @@
 		<sl4j.version> 1.7.25			</sl4j.version>
 		<log4j.version> 1.2.17			</log4j.version>
 		<servlet.version> 3.0.1			</servlet.version>
-		<servletjsp.version> 2.3.1			</servletjsp.version>
+		<servletjsp.version> 2.3.1		</servletjsp.version>
 		<jstl.version> 1.2				</jstl.version>
 		<spring.version> 5.0.7.RELEASE	</spring.version>
-		<annotation.version> 1.2				</annotation.version>
+		<hibernate.version> 5.3.3.Final </hibernate.version>
+		<hibernate.annotation.version> 3.5.6-Final </hibernate.annotation.version>
+		<hibernate.common.version> 3.3.0.ga </hibernate.common.version>
+		<annotation.version> 1.2		</annotation.version>
 		<inject.version> 1				</inject.version>
 		<hikari.version> 3.2.0			</hikari.version>
 	</properties>
@@ -95,6 +98,21 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-annotations</artifactId>
+			<version>${hibernate.annotation.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-commons-annotations</artifactId>
+			<version>${hibernate.common.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.annotation</groupId>

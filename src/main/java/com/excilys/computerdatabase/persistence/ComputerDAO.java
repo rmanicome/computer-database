@@ -1,25 +1,19 @@
 package com.excilys.computerdatabase.persistence;
 
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Optional;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.computerdatabase.model.Company;
+import com.excilys.computerdatabase.configuration.HibernateConfiguration;
 import com.excilys.computerdatabase.model.Computer;
-import com.excilys.computerdatabase.model.Computer.ComputerBuilder;
 import com.excilys.computerdatabase.service.CompanyService;
 
 @Repository
 public class ComputerDAO {
-	private JdbcTemplate jdbcTemplate = new JdbcTemplate(ConnectionPool.getDataSource());
-	@Autowired
-	private CompanyService companyService;
-	
 	private final static String GET_LIST = 
 			"SELECT "+ConstantBD.COMPUTER_ID+","
 					+ConstantBD.COMPUTER_NAME+","
@@ -33,65 +27,66 @@ public class ComputerDAO {
 					+ConstantBD.COMPUTER_INTRODUCED+","
 					+ConstantBD.COMPUTER_DISCONTINUED+","
 					+ConstantBD.COMPUTER_COMPANY_ID+
-			" FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+"= ?;";
+			" FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+"= :id;";
 	private final static String ADD = 
 			"INSERT INTO "+ConstantBD.COMPUTER_TABLE+" ("
 					+ConstantBD.COMPUTER_NAME+","
 					+ConstantBD.COMPUTER_INTRODUCED+","
 					+ConstantBD.COMPUTER_DISCONTINUED+","
 					+ConstantBD.COMPUTER_COMPANY_ID+") "
-			+ "values (?, ?, ?, ?);";
+			+ "values (:name, :introduced, :discontinued, :company);";
 	private final static String UPDATE = 
 			"UPDATE "+ConstantBD.COMPUTER_TABLE+
-			" SET "+ConstantBD.COMPUTER_NAME+" = ?, "
-					+ConstantBD.COMPUTER_INTRODUCED+" = ?, "
-					+ConstantBD.COMPUTER_DISCONTINUED+" = ?, "
-					+ConstantBD.COMPUTER_COMPANY_ID+" = ? WHERE "+ConstantBD.COMPUTER_ID+" = ?;";
-	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+" = ?;";
+			" SET "+ConstantBD.COMPUTER_NAME+" = :name, "
+					+ConstantBD.COMPUTER_INTRODUCED+" = :introduced, "
+					+ConstantBD.COMPUTER_DISCONTINUED+" = :discontinued, "
+					+ConstantBD.COMPUTER_COMPANY_ID+" = :company WHERE "+ConstantBD.COMPUTER_ID+" = :id;";
+	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+" = :id;";
 
 	public ArrayList<Computer> get(){
-		ArrayList<Computer> computerList = new ArrayList<Computer>();
+		Session session = HibernateConfiguration.getSession();
+		Query<Computer> query = session.createQuery(GET_LIST);
 		
-		for (Map<String, Object> computer : jdbcTemplate.queryForList(GET_LIST)) {
-			computerList.add(new ComputerBuilder((String) computer.get(ConstantBD.COMPANY_NAME))
-					.withId((Long) computer.get(ConstantBD.COMPUTER_ID))
-					.withIntroducedDate((Date) computer.get(ConstantBD.COMPUTER_INTRODUCED))
-					.withDiscountedDate((Date) computer.get(ConstantBD.COMPUTER_DISCONTINUED))
-					.withCompany((Company) companyService.get((Long) computer.get(ConstantBD.COMPUTER_COMPANY_ID)).orElse(null)).build());
-		}
-	
-		return computerList;
+		return (ArrayList<Computer>) query.getResultList();
 	}
 	
 	public Optional<Computer> get(Integer id) {
-		Map<String, Object> result = jdbcTemplate.queryForMap(GET_BY_ID, id);
+		Session session = HibernateConfiguration.getSession();
+		Query<Computer> query = session.createQuery(GET_BY_ID);
+		query.setParameter("id", id);
 		
-		return Optional.of(new ComputerBuilder((String) result.get(ConstantBD.COMPANY_NAME))
-				.withId((Long) result.get(ConstantBD.COMPUTER_ID))
-				.withIntroducedDate((Date) result.get(ConstantBD.COMPUTER_INTRODUCED))
-				.withDiscountedDate((Date) result.get(ConstantBD.COMPUTER_DISCONTINUED))
-				.withCompany((Company) companyService.get((Long) result.get(ConstantBD.COMPUTER_COMPANY_ID)).orElse(null)).build());
+		return query.uniqueResultOptional(); 
 	}
 
 	public void add(Computer comp) {
-		jdbcTemplate.update(ADD,
-				comp.getName(), 
-				comp.getIntroducedDate(), 
-				comp.getDiscontinuedDate(), 
-				comp.getCompany() != null ? comp.getCompany().getId() : null);
+		Session session = HibernateConfiguration.getSession();
+		Query<Computer> query = session.createQuery(ADD);
+		query.setParameter("name", comp.getName());
+		query.setParameter("introduced", comp.getIntroducedDate());
+		query.setParameter("discontinued", comp.getDiscontinuedDate());
+		query.setParameter("company", comp.getCompany().getId());
+		
+		query.executeUpdate();
 	}
 
 	public void update(Computer comp) {
-		jdbcTemplate.update(UPDATE, 
-				comp.getName(), 
-				comp.getIntroducedDate(), 
-				comp.getDiscontinuedDate(), 
-				comp.getCompany() != null ? comp.getCompany().getId() : null,
-				comp.getId());
+		Session session = HibernateConfiguration.getSession();
+		Query<Computer> query = session.createQuery(UPDATE);
+		query.setParameter("name", comp.getName());
+		query.setParameter("introduced", comp.getIntroducedDate());
+		query.setParameter("discontinued", comp.getDiscontinuedDate());
+		query.setParameter("company", comp.getCompany().getId());
+		query.setParameter("id", comp.getId());
+		
+		query.executeUpdate();
 	}
 
 	public void delete(Computer comp) {
-		jdbcTemplate.update(DELETE, comp.getId());
+		Session session = HibernateConfiguration.getSession();
+		Query<Computer> query = session.createQuery(DELETE);
+		query.setParameter("id", comp.getId());
+		
+		query.executeUpdate();
 	}
 
 }
