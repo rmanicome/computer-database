@@ -2,11 +2,24 @@ package com.excilys.computerdatabase.model;
 
 import java.sql.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "computer")
 public class Computer {
+	@Id
+	@Column(name="id", unique=true, nullable=false)
 	private long id;
+	@Column(name="name", nullable=false)
 	private String name;
+	@Column(name="introduced", nullable=true)
 	private Date introducedDate;
+	@Column(name="discontinued", nullable=true)
 	private Date discontinuedDate;
+	@Column(name="company_id")
 	private Company company;
 	
 	public Computer(String name) {
