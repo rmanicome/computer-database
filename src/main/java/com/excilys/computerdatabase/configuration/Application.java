@@ -7,7 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = {"com.excilys.computerdatabase.mapper",
 		"com.excilys.computerdatabase.validator",
 		"com.excilys.computerdatabase.service",
-		"com.excilys.computerdatabase.persistence"})
+		"com.excilys.computerdatabase.persistence",
+		"com.excilys.computerdatabase.configuration"})
 public class Application {
 		
 }

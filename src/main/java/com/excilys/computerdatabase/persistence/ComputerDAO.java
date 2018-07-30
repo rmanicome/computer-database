@@ -8,12 +8,13 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.excilys.computerdatabase.configuration.HibernateConfiguration;
 import com.excilys.computerdatabase.model.Computer;
-import com.excilys.computerdatabase.service.CompanyService;
 
 @Repository
 public class ComputerDAO {
+	@Autowired
+	private Session session;
+	
 	private final static String GET_LIST = 
 			"SELECT "+ConstantBD.COMPUTER_ID+","
 					+ConstantBD.COMPUTER_NAME+","
@@ -44,14 +45,12 @@ public class ComputerDAO {
 	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+" = :id;";
 
 	public ArrayList<Computer> get(){
-		Session session = HibernateConfiguration.getSession();
 		Query<Computer> query = session.createQuery(GET_LIST);
 		
 		return (ArrayList<Computer>) query.getResultList();
 	}
 	
 	public Optional<Computer> get(Integer id) {
-		Session session = HibernateConfiguration.getSession();
 		Query<Computer> query = session.createQuery(GET_BY_ID);
 		query.setParameter("id", id);
 		
@@ -59,7 +58,6 @@ public class ComputerDAO {
 	}
 
 	public void add(Computer comp) {
-		Session session = HibernateConfiguration.getSession();
 		Query<Computer> query = session.createQuery(ADD);
 		query.setParameter("name", comp.getName());
 		query.setParameter("introduced", comp.getIntroducedDate());
@@ -70,7 +68,6 @@ public class ComputerDAO {
 	}
 
 	public void update(Computer comp) {
-		Session session = HibernateConfiguration.getSession();
 		Query<Computer> query = session.createQuery(UPDATE);
 		query.setParameter("name", comp.getName());
 		query.setParameter("introduced", comp.getIntroducedDate());
@@ -82,7 +79,6 @@ public class ComputerDAO {
 	}
 
 	public void delete(Computer comp) {
-		Session session = HibernateConfiguration.getSession();
 		Query<Computer> query = session.createQuery(DELETE);
 		query.setParameter("id", comp.getId());
 		
