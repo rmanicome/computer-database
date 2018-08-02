@@ -1,6 +1,6 @@
 package com.excilys.computerdatabase.persistence;
 
-public class ConstantBD {
+public class ConstantDB {
 	public final static String COMPUTER_TABLE = "computer";
 	public final static String COMPUTER_ID = "id";
 	public final static String COMPUTER_NAME = "name";

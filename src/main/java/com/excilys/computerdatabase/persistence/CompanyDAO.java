@@ -4,55 +4,67 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.excilys.computerdatabase.configuration.HibernateConfiguration;
 import com.excilys.computerdatabase.model.Company;
+import com.excilys.computerdatabase.model.Computer;
 
 @Repository
 public class CompanyDAO {
-	@Autowired
-	private Session session;
+	private final static SessionFactory SESSION_FACTORY = HibernateConfiguration.getSessionFactory();
 	
-	private final static String GET = "SELECT "+ConstantBD.COMPANY_ID+","+ConstantBD.COMPANY_NAME+" FROM "+ConstantBD.COMPANY_TABLE+";";
-	private final static String GET_BY_NAME = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_NAME+" = :name;"; 
-	private final static String GET_BY_ID = "SELECT * FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = :id;";
-	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPANY_TABLE+" WHERE "+ConstantBD.COMPANY_ID+" = :id;";
-	private final static String DELETE_COMPUTER = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_COMPANY_ID+" = :id;";
+	private final static String GET = "SELECT "+ConstantDB.COMPANY_ID+","+ConstantDB.COMPANY_NAME+" FROM Company";
+	private final static String GET_BY_NAME = "SELECT * FROM Company WHERE "+ConstantDB.COMPANY_NAME+" = ?"; 
+	private final static String GET_BY_ID = "SELECT * FROM Company WHERE "+ConstantDB.COMPANY_ID+" = ?";
+	private final static String DELETE = "DELETE FROM Company WHERE "+ConstantDB.COMPANY_ID+" = ?";
+	private final static String DELETE_COMPUTER = "DELETE FROM Computer WHERE "+ConstantDB.COMPUTER_COMPANY_ID+" = ?";
 	
 	public ArrayList<Company> get() {
-		Query<Company> query = session.createQuery(GET);
+		Session session = SESSION_FACTORY.openSession();
 		
-		return (ArrayList<Company>) query.getResultList();
+		Query<Company> query = session.createQuery(GET, Company.class);
+		ArrayList<Company> companyList = (ArrayList<Company>) query.getResultList();
+		session.close();
+		
+		return companyList;
 	}
 	
 	public Optional<Company> get(String name) {
-		Query<Company> query = session.createQuery(GET_BY_NAME);
-		query.setParameter("name", name);
+		Session session = SESSION_FACTORY.openSession();
 		
-		return query.uniqueResultOptional();
+		Query<Company> query = session.createQuery(GET_BY_NAME, Company.class);
+		query.setParameter(0, name);
+		Company company = query.getSingleResult();
+		session.close();
 		
+		return Optional.ofNullable(company);
 	}
 	
-	
-	
-	
-	
 	public Optional<Company> get(Long id) {
-		Query<Company> query = session.createQuery(GET_BY_ID);
-		query.setParameter("id", id);
+		Session session = SESSION_FACTORY.openSession();
 		
-		return query.uniqueResultOptional();
+		Query<Company> query = session.createQuery(GET_BY_ID, Company.class);
+		query.setParameter(0, id);
+		Company company = query.getSingleResult();
+		session.close();
+		
+		return Optional.ofNullable(company);
 	}
 	
 	public void delete(Long id) {
-		Query<Company> query = session.createQuery(DELETE);
-		query.setParameter("id", id);
-		Query<Company> queryComputer = session.createQuery(DELETE_COMPUTER);
-		queryComputer.setParameter("id", id);
+		Session session = SESSION_FACTORY.openSession();
+		
+		Query<Computer> queryComputer = session.createQuery(DELETE_COMPUTER, Computer.class);
+		queryComputer.setParameter(0, id);
+		Query<Company> queryCompany = session.createQuery(DELETE, Company.class);
+		queryCompany.setParameter(0, id);
 		
 		queryComputer.executeUpdate();
-		query.executeUpdate();
+		queryCompany.executeUpdate();
+		
+		session.close();
 	}
 }

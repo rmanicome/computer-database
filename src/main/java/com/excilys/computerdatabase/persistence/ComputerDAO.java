@@ -4,85 +4,101 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.excilys.computerdatabase.configuration.HibernateConfiguration;
 import com.excilys.computerdatabase.model.Computer;
 
 @Repository
 public class ComputerDAO {
-	@Autowired
-	private Session session;
+	private final static SessionFactory SESSION_FACTORY = HibernateConfiguration.getSessionFactory();
 	
 	private final static String GET_LIST = 
-			"SELECT "+ConstantBD.COMPUTER_ID+","
-					+ConstantBD.COMPUTER_NAME+","
-					+ConstantBD.COMPUTER_INTRODUCED+","
-					+ConstantBD.COMPUTER_DISCONTINUED+","
-					+ConstantBD.COMPUTER_COMPANY_ID+
-			" FROM "+ConstantBD.COMPUTER_TABLE+";";
+			"SELECT "+ConstantDB.COMPUTER_ID+","
+					+ConstantDB.COMPUTER_NAME+","
+					+ConstantDB.COMPUTER_INTRODUCED+","
+					+ConstantDB.COMPUTER_DISCONTINUED+","
+					+ConstantDB.COMPUTER_COMPANY_ID+
+			" FROM Computer";
 	private final static String GET_BY_ID = 
-			"SELECT "+ConstantBD.COMPUTER_ID+","
-					+ConstantBD.COMPUTER_NAME+","
-					+ConstantBD.COMPUTER_INTRODUCED+","
-					+ConstantBD.COMPUTER_DISCONTINUED+","
-					+ConstantBD.COMPUTER_COMPANY_ID+
-			" FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+"= :id;";
+			"SELECT "+ConstantDB.COMPUTER_ID+","
+					+ConstantDB.COMPUTER_NAME+","
+					+ConstantDB.COMPUTER_INTRODUCED+","
+					+ConstantDB.COMPUTER_DISCONTINUED+","
+					+ConstantDB.COMPUTER_COMPANY_ID+
+			" FROM Computer WHERE "+ConstantDB.COMPUTER_ID+"= ?";
 	private final static String ADD = 
-			"INSERT INTO "+ConstantBD.COMPUTER_TABLE+" ("
-					+ConstantBD.COMPUTER_NAME+","
-					+ConstantBD.COMPUTER_INTRODUCED+","
-					+ConstantBD.COMPUTER_DISCONTINUED+","
-					+ConstantBD.COMPUTER_COMPANY_ID+") "
-			+ "values (:name, :introduced, :discontinued, :company);";
+			"INSERT INTO Computer ("
+					+ConstantDB.COMPUTER_NAME+","
+					+ConstantDB.COMPUTER_INTRODUCED+","
+					+ConstantDB.COMPUTER_DISCONTINUED+","
+					+ConstantDB.COMPUTER_COMPANY_ID+") "
+			+ "values (?, ?, ?, ?)";
 	private final static String UPDATE = 
-			"UPDATE "+ConstantBD.COMPUTER_TABLE+
-			" SET "+ConstantBD.COMPUTER_NAME+" = :name, "
-					+ConstantBD.COMPUTER_INTRODUCED+" = :introduced, "
-					+ConstantBD.COMPUTER_DISCONTINUED+" = :discontinued, "
-					+ConstantBD.COMPUTER_COMPANY_ID+" = :company WHERE "+ConstantBD.COMPUTER_ID+" = :id;";
-	private final static String DELETE = "DELETE FROM "+ConstantBD.COMPUTER_TABLE+" WHERE "+ConstantBD.COMPUTER_ID+" = :id;";
+			"UPDATE Computer SET "+ConstantDB.COMPUTER_NAME+" = ?, "
+					+ConstantDB.COMPUTER_INTRODUCED+" = ?, "
+					+ConstantDB.COMPUTER_DISCONTINUED+" = ?, "
+					+ConstantDB.COMPUTER_COMPANY_ID+" = ? WHERE "+ConstantDB.COMPUTER_ID+" = ?";
+	private final static String DELETE = "DELETE FROM Computer WHERE "+ConstantDB.COMPUTER_ID+" = ?";
 
 	public ArrayList<Computer> get(){
-		Query<Computer> query = session.createQuery(GET_LIST);
+		Session session = SESSION_FACTORY.openSession();
 		
-		return (ArrayList<Computer>) query.getResultList();
+		Query<Computer> query = session.createQuery(GET_LIST, Computer.class);
+		ArrayList<Computer> computerList = (ArrayList<Computer>) query.getResultList();
+		session.close();
+		
+		return computerList;
 	}
 	
 	public Optional<Computer> get(Integer id) {
-		Query<Computer> query = session.createQuery(GET_BY_ID);
-		query.setParameter("id", id);
+		Session session = SESSION_FACTORY.openSession();
 		
-		return query.uniqueResultOptional(); 
+		Query<Computer> query = session.createQuery(GET_BY_ID, Computer.class);
+		query.setParameter(0, id);
+		Computer computer = query.getSingleResult();
+		session.close();
+		
+		return Optional.ofNullable(computer);
 	}
 
 	public void add(Computer comp) {
-		Query<Computer> query = session.createQuery(ADD);
-		query.setParameter("name", comp.getName());
-		query.setParameter("introduced", comp.getIntroducedDate());
-		query.setParameter("discontinued", comp.getDiscontinuedDate());
-		query.setParameter("company", comp.getCompany().getId());
+		Session session = SESSION_FACTORY.openSession();
 		
+		Query<Computer> query = session.createQuery(ADD, Computer.class);
+		query.setParameter(0, comp.getName());
+		query.setParameter(1, comp.getIntroducedDate());
+		query.setParameter(2, comp.getDiscontinuedDate());
+		query.setParameter(3, comp.getCompany().getId());
 		query.executeUpdate();
+		
+		session.close();
 	}
 
 	public void update(Computer comp) {
-		Query<Computer> query = session.createQuery(UPDATE);
-		query.setParameter("name", comp.getName());
-		query.setParameter("introduced", comp.getIntroducedDate());
-		query.setParameter("discontinued", comp.getDiscontinuedDate());
-		query.setParameter("company", comp.getCompany().getId());
-		query.setParameter("id", comp.getId());
+		Session session = SESSION_FACTORY.openSession();
 		
+		Query<Computer> query = session.createQuery(UPDATE, Computer.class);
+		query.setParameter(0, comp.getName());
+		query.setParameter(1, comp.getIntroducedDate());
+		query.setParameter(2, comp.getDiscontinuedDate());
+		query.setParameter(3, comp.getCompany().getId());
+		query.setParameter(4, comp.getId());
 		query.executeUpdate();
+		
+		session.close();
 	}
 
 	public void delete(Computer comp) {
-		Query<Computer> query = session.createQuery(DELETE);
-		query.setParameter("id", comp.getId());
+		Session session = SESSION_FACTORY.openSession();
 		
+		Query<Computer> query = session.createQuery(DELETE, Computer.class);
+		query.setParameter(0, comp.getId());
 		query.executeUpdate();
+		
+		session.close();
 	}
 
 }

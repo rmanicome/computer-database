@@ -2,16 +2,20 @@ package com.excilys.computerdatabase.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.excilys.computerdatabase.persistence.ConstantDB;
+
 @Entity
-@Table(name="company")
+@Table(name=ConstantDB.COMPANY_TABLE)
 public class Company {
 	@Id
-	@Column(name="id", unique=true, nullable=false)
+	@GeneratedValue(generator="increment")
+	@Column(name=ConstantDB.COMPANY_ID)
 	private Long id;
-	@Column(name="name")
+	@Column(name=ConstantDB.COMPANY_NAME)
 	private String name;
 		
 	public Company(String name) {

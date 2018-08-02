@@ -1,32 +1,39 @@
 package com.excilys.computerdatabase.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.excilys.computerdatabase.persistence.ConstantDB;
+
 @Entity
-@Table(name = "computer")
+@Table(name=ConstantDB.COMPUTER_TABLE)
 public class Computer {
 	@Id
-	@Column(name="id", unique=true, nullable=false)
+	@GeneratedValue(generator="increment")
+	@Column(name=ConstantDB.COMPUTER_ID)
 	private long id;
-	@Column(name="name", nullable=false)
+	@Column(name=ConstantDB.COMPUTER_NAME)
 	private String name;
-	@Column(name="introduced", nullable=true)
-	private Date introducedDate;
-	@Column(name="discontinued", nullable=true)
-	private Date discontinuedDate;
-	@Column(name="company_id")
+	@Column(name=ConstantDB.COMPUTER_INTRODUCED)
+	private LocalDate introducedDate;
+	@Column(name=ConstantDB.COMPUTER_DISCONTINUED)
+	private LocalDate discontinuedDate;
+	@ManyToOne
+	@JoinColumn(name=ConstantDB.COMPUTER_COMPANY_ID)
 	private Company company;
 	
 	public Computer(String name) {
 		this.name = name;
 	}
 	
-	public Computer(long id, String name, Date introducedDate, Date discountedDate, Company company) {
+	public Computer(long id, String name, LocalDate introducedDate, LocalDate discountedDate, Company company) {
 		this.id = id;
 		this.name = name;
 		this.introducedDate = introducedDate;
@@ -38,8 +45,8 @@ public class Computer {
 	public static class ComputerBuilder {
 		long id;
 		String name;
-		Date introducedDate;
-		Date discontinuedDate;
+		LocalDate introducedDate;
+		LocalDate discontinuedDate;
 		Company company;
 		
 		public ComputerBuilder(String name) {
@@ -56,12 +63,12 @@ public class Computer {
 			return this;
 		}
 		
-		public ComputerBuilder withIntroducedDate(Date introduced){
+		public ComputerBuilder withIntroducedDate(LocalDate introduced){
 			this.introducedDate = introduced;
 			return this;
 		}
 		
-		public ComputerBuilder withDiscountedDate(Date discontinued){
+		public ComputerBuilder withDiscountedDate(LocalDate discontinued){
 			this.discontinuedDate = discontinued;
 			return this;
 		}
@@ -84,19 +91,19 @@ public class Computer {
 		this.id = id;
 	}
 	
-	public Date getIntroducedDate() {
+	public LocalDate getIntroducedDate() {
 		return introducedDate;
 	}
 
-	public void setIntroducedDate(Date introducedDate) {
+	public void setIntroducedDate(LocalDate introducedDate) {
 		this.introducedDate = introducedDate;
 	}
 
-	public Date getDiscontinuedDate() {
+	public LocalDate getDiscontinuedDate() {
 		return discontinuedDate;
 	}
 
-	public void setDiscontinuedDate(Date discontinuedDate) {
+	public void setDiscontinuedDate(LocalDate discontinuedDate) {
 		this.discontinuedDate = discontinuedDate;
 	}
 
