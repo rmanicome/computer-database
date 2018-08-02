@@ -3,13 +3,11 @@ package com.excilys.computerdatabase.configuration;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.springframework.context.annotation.Bean;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.persistence.ConfigDB;
 
-@org.springframework.context.annotation.Configuration
 public class HibernateConfiguration {
 	static SessionFactory sessionFactory ;
 	
@@ -17,6 +15,7 @@ public class HibernateConfiguration {
 		Configuration configuration = new Configuration();
 		configuration.addAnnotatedClass (Computer.class);
 		configuration.addAnnotatedClass (Company.class);
+		configuration.setProperty("hibernate.connection.provider_class", "com.zaxxer.hikari.hibernate.HikariConnectionProvider");
 		configuration.setProperty("hibernate.connection.driver_class", ConfigDB.DRIVER);
 		configuration.setProperty("hibernate.connection.url", ConfigDB.URL);                                
 		configuration.setProperty("hibernate.connection.username", ConfigDB.USER_NAME);     
@@ -30,7 +29,6 @@ public class HibernateConfiguration {
 		sessionFactory = configuration.buildSessionFactory(builder.build());
 	}
 	
-	@Bean
 	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
