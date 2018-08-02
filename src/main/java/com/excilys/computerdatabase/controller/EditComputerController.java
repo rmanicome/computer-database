@@ -32,7 +32,7 @@ public class EditComputerController {
 	@GetMapping(ControllerConstant.EDIT_COMPUTER)
 	public String showEditPage(ModelMap model, @RequestParam(name="computer", required=true) String computer) {
 		ArrayList<Computer> computerList = computerService.get();
-		Integer computerId = Integer.parseInt(computer);
+		Long computerId = Long.parseLong(computer);
 		
 		if(computerId > computerList.size()) {
 			model.addAttribute("error", "This id is not in the database");
@@ -51,7 +51,7 @@ public class EditComputerController {
 			computerValidator.checkComputer(name, introduced, discontinued, company);
 			computerService.update(computerMapper.buildComputer(id, name, introduced, discontinued, company));
 			
-			model.addAttribute("computer", computerService.get(Integer.parseInt(id)).get());
+			model.addAttribute("computer", computerService.get(Long.parseLong(id)).get());
 			model.addAttribute("companies", companyService.get());
 			model.addAttribute("done", true);
 		} catch (IncorrectInputException e) {

@@ -21,10 +21,10 @@ public class DeleteComputerController {
 		int t = 0;
 		
 		while(selection.indexOf(",", t) >= 0){
-			computerService.delete(computerService.get(Integer.parseInt(selection.substring(t, selection.indexOf(",", t)))).get());
+			computerService.delete(computerService.get(Long.parseLong(selection.substring(t, selection.indexOf(",", t)))).get());
 			t = selection.indexOf(",", t)+1;
 		}
-		computerService.delete(computerService.get(Integer.parseInt(selection.substring(selection.lastIndexOf(',')+1, selection.length()))).get());
+		computerService.delete(computerService.get(Long.parseLong(selection.substring(selection.lastIndexOf(',')+1, selection.length()))).get());
 		
 		return new RedirectView(ControllerConstant.DASHBOARD);
 	}

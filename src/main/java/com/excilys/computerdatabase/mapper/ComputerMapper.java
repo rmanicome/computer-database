@@ -14,8 +14,10 @@ public class ComputerMapper {
 	private CompanyService companyService;
 	
 	public Computer buildComputer(String id, String name, String introduced, String discontinued, String idCompany) {
+		Long companyId = Long.parseLong(idCompany);
+		
 		return new Computer.ComputerBuilder(name).withId(Long.parseLong(id)).withIntroducedDate(introduced == "" ? null : Date.valueOf(introduced).toLocalDate())
 				.withDiscountedDate(discontinued == "" ? null : Date.valueOf(discontinued).toLocalDate())
-				.withCompany(companyService.get(Long.parseLong(idCompany)).orElse(null)).build();
+				.withCompany(companyId == 0 ? null : companyService.get(companyId).get()).build();
 	}
 }

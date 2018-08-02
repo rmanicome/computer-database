@@ -18,7 +18,7 @@ public class ComputerService {
 		return computerDAO.get();
 	}
 	
-	public Optional<Computer> get(Integer id){
+	public Optional<Computer> get(Long id){
 		return computerDAO.get(id);
 	}
 

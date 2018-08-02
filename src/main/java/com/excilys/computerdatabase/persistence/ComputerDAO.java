@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,33 +17,8 @@ import com.excilys.computerdatabase.model.Computer;
 public class ComputerDAO {
 	private final static SessionFactory SESSION_FACTORY = HibernateConfiguration.getSessionFactory();
 	
-	private final static String GET_LIST = 
-//			"SELECT Computer."+ConstantDB.COMPUTER_ID+","
-//					+"Computer."+ConstantDB.COMPUTER_NAME+","
-//					+"Computer."+ConstantDB.COMPUTER_INTRODUCED+","
-//					+"Computer."+ConstantDB.COMPUTER_DISCONTINUED+","
-//					+"Computer."+ConstantDB.COMPUTER_COMPANY_ID+
-			" FROM Computer";
-	private final static String GET_BY_ID = 
-//			"SELECT Computer."+ConstantDB.COMPUTER_ID+","
-//					+"Computer."+ConstantDB.COMPUTER_NAME+","
-//					+"Computer."+ConstantDB.COMPUTER_INTRODUCED+","
-//					+"Computer."+ConstantDB.COMPUTER_DISCONTINUED+","
-//					+"Computer."+ConstantDB.COMPUTER_COMPANY_ID+
-			" FROM Computer WHERE Computer."+ConstantDB.COMPUTER_ID+"= ?";
-	private final static String ADD = 
-			"INSERT INTO Computer ("
-					+"Computer."+ConstantDB.COMPUTER_NAME+","
-					+"Computer."+ConstantDB.COMPUTER_INTRODUCED+","
-					+"Computer."+ConstantDB.COMPUTER_DISCONTINUED+","
-					+"Computer."+ConstantDB.COMPUTER_COMPANY_ID+") "
-			+ "values (?, ?, ?, ?)";
-	private final static String UPDATE = 
-			"UPDATE Computer SET Computer."+ConstantDB.COMPUTER_NAME+" = ?, "
-					+"Computer."+ConstantDB.COMPUTER_INTRODUCED+" = ?, "
-					+"Computer."+ConstantDB.COMPUTER_DISCONTINUED+" = ?, "
-					+"Computer."+ConstantDB.COMPUTER_COMPANY_ID+" = ? WHERE Computer."+ConstantDB.COMPUTER_ID+" = ?";
-	private final static String DELETE = "DELETE FROM Computer WHERE Computer."+ConstantDB.COMPUTER_ID+" = ?";
+	private final static String GET_LIST = "FROM Computer";
+	private final static String GET_BY_ID = "FROM Computer WHERE "+ConstantDB.COMPUTER_ID+"= :id";
 
 	public ArrayList<Computer> get(){
 		Session session = SESSION_FACTORY.openSession();
@@ -54,11 +30,11 @@ public class ComputerDAO {
 		return computerList;
 	}
 	
-	public Optional<Computer> get(Integer id) {
+	public Optional<Computer> get(Long id) {
 		Session session = SESSION_FACTORY.openSession();
 		
 		TypedQuery<Computer> query = session.createQuery(GET_BY_ID, Computer.class);
-		query.setParameter(0, id);
+		query.setParameter("id", id);
 		Computer computer = query.getSingleResult();
 		session.close();
 		
@@ -67,38 +43,27 @@ public class ComputerDAO {
 
 	public void add(Computer comp) {
 		Session session = SESSION_FACTORY.openSession();
-		
-		TypedQuery<Computer> query = session.createQuery(ADD, Computer.class);
-		query.setParameter(0, comp.getName());
-		query.setParameter(1, comp.getIntroducedDate());
-		query.setParameter(2, comp.getDiscontinuedDate());
-		query.setParameter(3, comp.getCompany().getId());
-		query.executeUpdate();
-		
+		session.beginTransaction();
+		session.save(comp);
+		session.getTransaction().commit();
 		session.close();
 	}
 
+	@Transactional
 	public void update(Computer comp) {
 		Session session = SESSION_FACTORY.openSession();
-		
-		TypedQuery<Computer> query = session.createQuery(UPDATE, Computer.class);
-		query.setParameter(0, comp.getName());
-		query.setParameter(1, comp.getIntroducedDate());
-		query.setParameter(2, comp.getDiscontinuedDate());
-		query.setParameter(3, comp.getCompany().getId());
-		query.setParameter(4, comp.getId());
-		query.executeUpdate();
-		
+		session.beginTransaction();
+		session.update(comp);
+		session.getTransaction().commit();
 		session.close();
 	}
 
+	@Transactional
 	public void delete(Computer comp) {
 		Session session = SESSION_FACTORY.openSession();
-		
-		TypedQuery<Computer> query = session.createQuery(DELETE, Computer.class);
-		query.setParameter(0, comp.getId());
-		query.executeUpdate();
-		
+		session.beginTransaction();
+		session.delete(comp);
+		session.getTransaction().commit();
 		session.close();
 	}
 
