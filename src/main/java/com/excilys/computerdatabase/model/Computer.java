@@ -21,13 +21,17 @@ public class Computer {
 	private long id;
 	@Column(name=ConstantDB.COMPUTER_NAME)
 	private String name;
-	@Column(name=ConstantDB.COMPUTER_INTRODUCED)
+	@Column(name=ConstantDB.COMPUTER_INTRODUCED, nullable=true)
 	private LocalDate introducedDate;
-	@Column(name=ConstantDB.COMPUTER_DISCONTINUED)
+	@Column(name=ConstantDB.COMPUTER_DISCONTINUED, nullable=true)
 	private LocalDate discontinuedDate;
 	@ManyToOne
 	@JoinColumn(name=ConstantDB.COMPUTER_COMPANY_ID)
 	private Company company;
+	
+	public Computer() {
+
+	}
 	
 	public Computer(String name) {
 		this.name = name;

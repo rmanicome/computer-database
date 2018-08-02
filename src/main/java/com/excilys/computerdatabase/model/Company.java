@@ -18,6 +18,10 @@ public class Company {
 	@Column(name=ConstantDB.COMPANY_NAME)
 	private String name;
 		
+	public Company() {
+		
+	}
+	
 	public Company(String name) {
 		this.name = name;
 	}
