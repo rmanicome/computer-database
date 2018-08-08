@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.model;
+package com.excilys.computerdatabase.paginator;
 
 import java.util.ArrayList;
 
