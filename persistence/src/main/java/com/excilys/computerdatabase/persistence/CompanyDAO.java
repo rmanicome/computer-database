@@ -8,17 +8,18 @@ import javax.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.excilys.computerdatabase.configuration.HibernateConfiguration;
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.model.ConstantDB;
 
 @Repository
 public class CompanyDAO {
-	private final static SessionFactory SESSION_FACTORY = HibernateConfiguration.getSessionFactory();
+	@Autowired
+	private static SessionFactory sessionFactory; 
 	
 	private final static String GET = "FROM Company";
 	private final static String GET_BY_NAME = "FROM Company WHERE "+ConstantDB.COMPANY_NAME+" = :name"; 
@@ -26,7 +27,7 @@ public class CompanyDAO {
 	private final static String DELETE_COMPUTER = "DELETE FROM "+ConstantDB.COMPUTER_TABLE+" WHERE "+ConstantDB.COMPUTER_COMPANY_ID+" = :id";
 	
 	public ArrayList<Company> get() {
-		Session session = SESSION_FACTORY.openSession();
+		Session session = sessionFactory.openSession();
 		
 		TypedQuery<Company> query = session.createQuery(GET, Company.class);
 		ArrayList<Company> companyList = (ArrayList<Company>) query.getResultList();
@@ -36,7 +37,7 @@ public class CompanyDAO {
 	}
 	
 	public Optional<Company> get(String name) {
-		Session session = SESSION_FACTORY.openSession();
+		Session session = sessionFactory.openSession();
 		
 		TypedQuery<Company> query = session.createQuery(GET_BY_NAME, Company.class);
 		query.setParameter("name", name);
@@ -47,7 +48,7 @@ public class CompanyDAO {
 	}
 	
 	public Optional<Company> get(Long id) {
-		Session session = SESSION_FACTORY.openSession();
+		Session session = sessionFactory.openSession();
 		
 		TypedQuery<Company> query = session.createQuery(GET_BY_ID, Company.class);
 		query.setParameter("id", id);
@@ -59,8 +60,8 @@ public class CompanyDAO {
 	
 	@Transactional
 	public void delete(Company comp) {
-		Session session = SESSION_FACTORY.openSession();
-		Query<Computer> query = session.createQuery(DELETE_COMPUTER);
+		Session session = sessionFactory.openSession();
+		Query<Computer> query = session.createQuery(DELETE_COMPUTER, Computer.class);
 		query.setParameter("id", comp.getId());
 		query.executeUpdate();
 		session.beginTransaction();

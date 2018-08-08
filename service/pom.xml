@@ -10,7 +10,6 @@
 	</parent>
 	<packaging>jar</packaging>
 	
-	<groupId>com.excilys.computerdatabase</groupId>
 	<artifactId>service</artifactId>
 	<name>service</name>
 	

@@ -10,7 +10,6 @@
 	</parent>
 	<packaging>jar</packaging>
 	
-	<groupId>com.excilys.computerdatabase</groupId>
 	<artifactId>binding</artifactId>
 	<name>binding</name>
 
