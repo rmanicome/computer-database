@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.configuration;
+package com.excilys.computerdatabase.springconfig;
 
 import java.util.Locale;
 

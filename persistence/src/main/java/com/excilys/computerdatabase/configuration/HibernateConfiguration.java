@@ -3,7 +3,6 @@ package com.excilys.computerdatabase.configuration;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.springframework.context.annotation.Bean;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
@@ -29,7 +28,6 @@ public class HibernateConfiguration {
 		sessionFactory = configuration.buildSessionFactory(builder.build());
 	}
 	
-	@Bean
 	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}

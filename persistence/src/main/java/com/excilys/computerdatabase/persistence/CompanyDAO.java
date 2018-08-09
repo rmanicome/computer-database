@@ -8,18 +8,17 @@ import javax.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.excilys.computerdatabase.configuration.HibernateConfiguration;
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.model.ConstantDB;
 
 @Repository
 public class CompanyDAO {
-	@Autowired
-	private static SessionFactory sessionFactory; 
+	private static SessionFactory sessionFactory = HibernateConfiguration.getSessionFactory(); 
 	
 	private final static String GET = "FROM Company";
 	private final static String GET_BY_NAME = "FROM Company WHERE "+ConstantDB.COMPANY_NAME+" = :name"; 

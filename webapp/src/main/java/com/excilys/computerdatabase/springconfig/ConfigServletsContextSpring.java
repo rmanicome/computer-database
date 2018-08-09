@@ -1,6 +1,8 @@
-package com.excilys.computerdatabase.configuration;
+package com.excilys.computerdatabase.springconfig;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import com.excilys.computerdatabase.configuration.Application;
 
 public class ConfigServletsContextSpring extends AbstractAnnotationConfigDispatcherServletInitializer {
 

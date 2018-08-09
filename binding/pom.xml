@@ -18,6 +18,7 @@
 		<dependency>
 			<groupId>com.excilys.computerdatabase</groupId>
 			<artifactId>service</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>
