@@ -8,7 +8,7 @@ public class ConfigServletsContextSpring extends AbstractAnnotationConfigDispatc
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class [] {Application.class};
+		return new Class [] {Application.class, SpringSecurityConfig.class};
 	}
 
 	@Override

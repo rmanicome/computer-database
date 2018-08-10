@@ -18,7 +18,7 @@ import com.excilys.computerdatabase.model.ConstantDB;
 
 @Repository
 public class CompanyDAO {
-	private static SessionFactory sessionFactory = HibernateConfiguration.getSessionFactory(); 
+	private static final SessionFactory SESSION_FACTORY = HibernateConfiguration.getSessionFactory();
 	
 	private final static String GET = "FROM Company";
 	private final static String GET_BY_NAME = "FROM Company WHERE "+ConstantDB.COMPANY_NAME+" = :name"; 
@@ -26,7 +26,7 @@ public class CompanyDAO {
 	private final static String DELETE_COMPUTER = "DELETE FROM "+ConstantDB.COMPUTER_TABLE+" WHERE "+ConstantDB.COMPUTER_COMPANY_ID+" = :id";
 	
 	public ArrayList<Company> get() {
-		Session session = sessionFactory.openSession();
+		Session session = SESSION_FACTORY.openSession();
 		
 		TypedQuery<Company> query = session.createQuery(GET, Company.class);
 		ArrayList<Company> companyList = (ArrayList<Company>) query.getResultList();
@@ -36,7 +36,7 @@ public class CompanyDAO {
 	}
 	
 	public Optional<Company> get(String name) {
-		Session session = sessionFactory.openSession();
+		Session session = SESSION_FACTORY.openSession();
 		
 		TypedQuery<Company> query = session.createQuery(GET_BY_NAME, Company.class);
 		query.setParameter("name", name);
@@ -47,7 +47,7 @@ public class CompanyDAO {
 	}
 	
 	public Optional<Company> get(Long id) {
-		Session session = sessionFactory.openSession();
+		Session session = SESSION_FACTORY.openSession();
 		
 		TypedQuery<Company> query = session.createQuery(GET_BY_ID, Company.class);
 		query.setParameter("id", id);
@@ -59,7 +59,7 @@ public class CompanyDAO {
 	
 	@Transactional
 	public void delete(Company comp) {
-		Session session = sessionFactory.openSession();
+		Session session = SESSION_FACTORY.openSession();
 		Query<Computer> query = session.createQuery(DELETE_COMPUTER, Computer.class);
 		query.setParameter("id", comp.getId());
 		query.executeUpdate();
