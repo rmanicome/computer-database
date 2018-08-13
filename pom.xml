@@ -19,6 +19,7 @@
 		<module>service</module>
 		<module>binding</module>
 		<module>webapp</module>
+		<module>webservice</module>
 		<module>console</module>
 	</modules>
 
@@ -41,6 +42,7 @@
 		<hikari.version> 3.2.0			</hikari.version>
 		<hibernate.version> 5.3.3.Final	</hibernate.version>
 		<hibernate.persistence.version> 1.0.2.Final </hibernate.persistence.version>
+		<jackson.version> 2.9.6			</jackson.version>
 	</properties>
 
 	<dependencyManagement>
@@ -89,6 +91,18 @@
 				<groupId>org.hibernate.javax.persistence</groupId>
 				<artifactId>hibernate-jpa-2.1-api</artifactId>
 				<version>${hibernate.persistence.version}</version>
+			</dependency>
+
+			<!-- JACKSON -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.dataformat</groupId>
+				<artifactId>jackson-dataformat-xml</artifactId>
+				<version>${jackson.version}</version>
 			</dependency>
 
 			<!-- JAVAX -->
@@ -183,8 +197,19 @@
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>2.8.2</version>
 				</plugin>
+				<plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.4</version>
+                    <configuration>
+                        <warSourceDirectory>webservice</warSourceDirectory>
+                        <warName>cdb</warName>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
+                </plugin>
 			</plugins>
 		</pluginManagement>
+		<finalName>cdb</finalName>
 	</build>
 
 	<reporting>
