@@ -64,8 +64,9 @@ public class ComputerRestController {
 			}
 			computerList = searchList;
 		}
-
-		if(pageValue > computerList.size() / paginator.getMaxComputerPerPage() + (computerList.size() % paginator.getMaxComputerPerPage() == 0 ? 0 : 1))
+		if(computerList.size() / paginator.getMaxComputerPerPage() == 0)
+			pageValue = 0;
+		else if(pageValue > computerList.size() / paginator.getMaxComputerPerPage() + (computerList.size() % paginator.getMaxComputerPerPage() == 0 ? 0 : 1))
 			pageValue = computerList.size() / paginator.getMaxComputerPerPage() + (computerList.size() % paginator.getMaxComputerPerPage() == 0 ? 0 : 1);
 			
 		if(resultsPerPage.isPresent())
