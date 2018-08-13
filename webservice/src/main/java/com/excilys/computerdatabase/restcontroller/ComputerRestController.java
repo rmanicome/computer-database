@@ -30,7 +30,7 @@ public class ComputerRestController {
     @Autowired
     private ComputerService computerService;
     
-    @GetMapping("/{pk:\\d+}")
+    @GetMapping("/detail/{pk:\\d+}")
     public ResponseEntity<Computer> getComputer(@PathVariable("pk") Long pk) {
         Optional<Computer> result = computerService.get(pk);
         if(result.isPresent()) {
@@ -43,18 +43,19 @@ public class ComputerRestController {
     @GetMapping(path = {
             "",
             "/{page:\\d+}",
+            "/{page:\\d+}/{resultsPerPage:\\d+}",
             "/search/{search}",
+            "/search/{search}/{page:\\d+}",
+            "/search/{search}/{page:\\d+}/{resultsPerPage:\\d+}"
             })
     public List<Computer> listComputers(
             @PathVariable(name = "page", required = false) Optional<Integer> page,
+            @PathVariable(name = "resultsPerPage", required = false) Optional<Integer> resultsPerPage,
             @PathVariable(name = "search", required = false) Optional<String> search) {
-    	Integer pageValue = page.orElse(1);
+    	Integer pageValue = page.orElse(0);
     	ArrayList<Computer> computerList = computerService.get();
 		Page<Computer> paginator = new Page<>();
 		
-		if(pageValue > computerList.size() / paginator.getMaxComputerPerPage() + (computerList.size() % paginator.getMaxComputerPerPage() == 0 ? 0 : 1))
-			pageValue = computerList.size() / paginator.getMaxComputerPerPage() + (computerList.size() % paginator.getMaxComputerPerPage() == 0 ? 0 : 1);
-			
 		if(search.isPresent()){
 			ArrayList<Computer> searchList = new ArrayList<Computer>();
 			for (Computer computer : computerList) {
@@ -63,6 +64,14 @@ public class ComputerRestController {
 			}
 			computerList = searchList;
 		}
+
+		if(pageValue > computerList.size() / paginator.getMaxComputerPerPage() + (computerList.size() % paginator.getMaxComputerPerPage() == 0 ? 0 : 1))
+			pageValue = computerList.size() / paginator.getMaxComputerPerPage() + (computerList.size() % paginator.getMaxComputerPerPage() == 0 ? 0 : 1);
+			
+		if(resultsPerPage.isPresent())
+			Page.setMaxComputerPerPage(resultsPerPage.get());
+		
+		Page.setPageNumber(pageValue);
 		
 		return paginator.get(computerList);
     }
