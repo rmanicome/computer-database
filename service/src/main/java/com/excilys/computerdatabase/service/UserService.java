@@ -12,7 +12,7 @@ import com.excilys.computerdatabase.persistence.UserDAO;
 public class UserService  implements UserDetailsService {
 	@Autowired
 	private UserDAO userDAO;
-	
+
 	@Override
 	public User loadUserByUsername(String name) throws UsernameNotFoundException {
 		return userDAO.get(name).orElseThrow(() -> new UsernameNotFoundException("User not found"));

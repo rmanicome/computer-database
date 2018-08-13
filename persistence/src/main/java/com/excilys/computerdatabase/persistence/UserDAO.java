@@ -6,6 +6,7 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.configuration.HibernateConfiguration;
@@ -24,6 +25,7 @@ public class UserDAO {
 		TypedQuery<User> query = session.createQuery(GET, User.class);
 		query.setParameter("name", name);
 		User user = query.getSingleResult();
+		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 		
 		session.close();
 		

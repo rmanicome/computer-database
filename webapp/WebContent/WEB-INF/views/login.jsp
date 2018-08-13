@@ -10,11 +10,11 @@
 					<p class="form-control" style="background:#fba;">${param.error}</p>
 				</c:if>
 				<h1><spring:message code="login"/></h1>
-				<form action="login" method="POST" id="form" name="form" onsubmit="return verifLoginForm();">
+				<form action="login" method="POST" id="form" name="f" onsubmit="return verifLoginForm();">
 					<fieldset>
 						<div class="form-group">
 							<label for="userName"><spring:message code="userName"/></label> <input
-								type="text" class="form-control" id="userName" name="userName"
+								type="text" class="form-control" id="username" name="username"
 								placeholder="<spring:message code="userName"/>" onblur="verifNomUser(this)">
 						</div>
 						<div id="userNameError" style="display:none;">
@@ -32,6 +32,7 @@
 					<div class="actions pull-right">
 						<input type="submit" value="<spring:message code="login"/>" class="btn btn-primary">
 					</div>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				</form>
 			</div>
 		</div>

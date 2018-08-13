@@ -19,8 +19,6 @@ public class User implements UserDetails {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(name=ConstantDB.USER_ID)
-	private Long id;
 	@Column(name=ConstantDB.USER_NAME)
 	private String name;
 	@Column(name=ConstantDB.USER_PASSWORD)
@@ -35,6 +33,10 @@ public class User implements UserDetails {
 	public String getPassword() {
 		return password;
 	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	@Override
 	public String getUsername() {
@@ -43,22 +45,22 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return false;
+		return true;
 	}
 
 }

@@ -13,7 +13,6 @@ public class ConstantDB {
 	public final static String COMPANY_NAME = "name";
 	
 	public final static String USER_TABLE = "user";
-	public final static String USER_ID = "id";
-	public final static String USER_NAME = "name";
+	public final static String USER_NAME = "username";
 	public final static String USER_PASSWORD = "password";
 }
