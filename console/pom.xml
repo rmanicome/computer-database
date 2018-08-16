@@ -17,7 +17,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.excilys.computerdatabase</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>binding</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
