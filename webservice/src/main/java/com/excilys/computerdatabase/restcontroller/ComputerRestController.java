@@ -16,12 +16,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.paginator.Page;
+import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
 
 @RestController
-@RequestMapping(path = "/api/v1.0.0/computers", produces = "application/json")
+@RequestMapping(path = "/api/v1.0.0/", produces = "application/json")
 public class ComputerRestController {
     
     @SuppressWarnings("unused")
@@ -29,8 +32,10 @@ public class ComputerRestController {
     private static final String IDS_DO_NOT_MATCH = "request id and object id do not match";
     @Autowired
     private ComputerService computerService;
+    @Autowired
+    private CompanyService companyService;
     
-    @GetMapping("/detail/{pk:\\d+}")
+    @GetMapping("computers/detail/{pk:\\d+}")
     public ResponseEntity<Computer> getComputer(@PathVariable("pk") Long pk) {
         Optional<Computer> result = computerService.get(pk);
         if(result.isPresent()) {
@@ -40,13 +45,33 @@ public class ComputerRestController {
         }
     }
     
+    @GetMapping("companies/detail/{pk:\\d+}")
+    public ResponseEntity<Company> getCompany(@PathVariable("pk") Long pk) {
+        Optional<Company> result = companyService.get(pk);
+        if(result.isPresent()) {
+            return new ResponseEntity<>(result.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+    @GetMapping("companies/detail/{name}")
+    public ResponseEntity<Company> getCompany(@PathVariable("name") String name) {
+        Optional<Company> result = companyService.get(name);
+        if(result.isPresent()) {
+            return new ResponseEntity<>(result.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
     @GetMapping(path = {
-            "",
-            "/{page:\\d+}",
-            "/{page:\\d+}/{resultsPerPage:\\d+}",
-            "/search/{search}",
-            "/search/{search}/{page:\\d+}",
-            "/search/{search}/{page:\\d+}/{resultsPerPage:\\d+}"
+            "computers",
+            "computers/{page:\\d+}",
+            "computers/{page:\\d+}/{resultsPerPage:\\d+}",
+            "computers/search/{search}",
+            "computers/search/{search}/{page:\\d+}",
+            "computers/search/{search}/{page:\\d+}/{resultsPerPage:\\d+}"
             })
     public List<Computer> listComputers(
             @PathVariable(name = "page", required = false) Optional<Integer> page,
@@ -77,13 +102,20 @@ public class ComputerRestController {
 		return paginator.get(computerList);
     }
     
-    @PostMapping(consumes = "application/json")
+    @GetMapping(path = "companies")
+    public List<Company> listCompanies () {
+    	ArrayList<Company> companyList = companyService.get();
+		
+		return companyList;
+    }
+    
+    @PostMapping(path="computers", consumes = "application/json")
     public ResponseEntity<String> addComputer(@RequestBody Computer computer) {
         computerService.add(computer);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     
-    @PutMapping(path = "/{pk:\\d+}", consumes = "application/json")
+    @PutMapping(path = "computers/{pk:\\d+}", consumes = "application/json")
     public ResponseEntity<String> updateComputer(
             @PathVariable("pk") Long pk,
             @RequestBody Computer computer) {
@@ -94,9 +126,16 @@ public class ComputerRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
-    @DeleteMapping("/{pk:\\d+}")
+    @DeleteMapping("computers/{pk:\\d+}")
     public ResponseEntity<String> deleteComputer(@PathVariable("pk") Long pk) {
         computerService.delete(computerService.get(pk).get());
+        
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    
+    @DeleteMapping("comapnies/{pk:\\d+}")
+    public ResponseEntity<String> deleteCompany(@PathVariable("pk") Long pk) {
+        companyService.delete(companyService.get(pk).get());
         
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

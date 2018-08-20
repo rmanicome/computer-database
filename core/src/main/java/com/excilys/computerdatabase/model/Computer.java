@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.excilys.computerdatabase.model.ConstantDB;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name=ConstantDB.COMPUTER_TABLE)
@@ -22,8 +23,10 @@ public class Computer {
 	@Column(name=ConstantDB.COMPUTER_NAME)
 	private String name;
 	@Column(name=ConstantDB.COMPUTER_INTRODUCED, nullable=true)
+    @JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate introducedDate;
 	@Column(name=ConstantDB.COMPUTER_DISCONTINUED, nullable=true)
+    @JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate discontinuedDate;
 	@ManyToOne
 	@JoinColumn(name=ConstantDB.COMPUTER_COMPANY_ID)

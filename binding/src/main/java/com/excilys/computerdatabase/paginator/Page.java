@@ -2,8 +2,6 @@ package com.excilys.computerdatabase.paginator;
 
 import java.util.ArrayList;
 
-import com.excilys.computerdatabase.service.ComputerService;
-
 public class Page<T> {
 	private static Integer maxComputerPerPage = 50;
 	private static Integer pageNumber = 0;
@@ -42,7 +40,7 @@ public class Page<T> {
 		return pageNumber > 0;
 	}
 
-	public Boolean hasNextPage(ComputerService computerService) {
-		return pageNumber * maxComputerPerPage < computerService.get().size();
+	public Boolean hasNextPage(ArrayList<T> computers) {
+		return pageNumber * maxComputerPerPage < computers.size();
 	}
 }
