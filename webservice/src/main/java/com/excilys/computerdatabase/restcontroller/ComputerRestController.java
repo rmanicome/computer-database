@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import com.excilys.computerdatabase.paginator.Page;
 import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(path = "/api/v1.0.0/", produces = "application/json")
 public class ComputerRestController {
@@ -34,7 +36,7 @@ public class ComputerRestController {
     private ComputerService computerService;
     @Autowired
     private CompanyService companyService;
-    
+
     @GetMapping("computers/detail/{pk:\\d+}")
     public ResponseEntity<Computer> getComputer(@PathVariable("pk") Long pk) {
         Optional<Computer> result = computerService.get(pk);
@@ -44,7 +46,7 @@ public class ComputerRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
+
     @GetMapping("companies/detail/{pk:\\d+}")
     public ResponseEntity<Company> getCompany(@PathVariable("pk") Long pk) {
         Optional<Company> result = companyService.get(pk);
@@ -54,7 +56,7 @@ public class ComputerRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
+
     @GetMapping("companies/detail/{name}")
     public ResponseEntity<Company> getCompany(@PathVariable("name") String name) {
         Optional<Company> result = companyService.get(name);
@@ -64,7 +66,7 @@ public class ComputerRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
+
     @GetMapping(path = {
             "computers",
             "computers/{page:\\d+}",
@@ -101,20 +103,20 @@ public class ComputerRestController {
 		
 		return paginator.get(computerList);
     }
-    
+
     @GetMapping(path = "companies")
     public List<Company> listCompanies () {
     	ArrayList<Company> companyList = companyService.get();
 		
 		return companyList;
     }
-    
+
     @PostMapping(path="computers", consumes = "application/json")
     public ResponseEntity<String> addComputer(@RequestBody Computer computer) {
         computerService.add(computer);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    
+
     @PutMapping(path = "computers/{pk:\\d+}", consumes = "application/json")
     public ResponseEntity<String> updateComputer(
             @PathVariable("pk") Long pk,
@@ -125,14 +127,14 @@ public class ComputerRestController {
         
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    
+
     @DeleteMapping("computers/{pk:\\d+}")
     public ResponseEntity<String> deleteComputer(@PathVariable("pk") Long pk) {
         computerService.delete(computerService.get(pk).get());
         
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    
+
     @DeleteMapping("comapnies/{pk:\\d+}")
     public ResponseEntity<String> deleteCompany(@PathVariable("pk") Long pk) {
         companyService.delete(companyService.get(pk).get());
