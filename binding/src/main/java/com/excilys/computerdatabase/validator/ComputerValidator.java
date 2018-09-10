@@ -16,7 +16,7 @@ public class ComputerValidator {
 	private CompanyService companyService;
 	
 	private void checkName(String name) throws IncorrectInputException {
-		if(name.length() < 1) 
+		if(name==null || name.length() < 1) 
 			throw new IncorrectInputException("The name can't be empty");
 		else if (name.contains(",") || name.contains(";") || name.contains("'"))
 			throw new IncorrectInputException("The name can't contain caracters like ',',';','''");
@@ -48,7 +48,7 @@ public class ComputerValidator {
 		if(discontinued != ""){
 			checkDateFormat(discontinued);
 			checkDateReality(discontinued);
-			if(Date.valueOf(discontinued).before(Date.valueOf(introduced)))
+			if(introduced != "" && Date.valueOf(discontinued).before(Date.valueOf(introduced)))
 				throw new IncorrectInputException("The discontinued date can't be before the introduced date");
 		}
 	}

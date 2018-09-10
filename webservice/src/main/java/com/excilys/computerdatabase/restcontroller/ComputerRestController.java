@@ -20,9 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
-import com.excilys.computerdatabase.paginator.Page;
 import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
+import com.excilys.computerdatabase.validator.ComputerValidator;
+import com.excilys.computerdatabase.validator.IncorrectInputException;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -36,6 +37,8 @@ public class ComputerRestController {
     private ComputerService computerService;
     @Autowired
     private CompanyService companyService;
+    @Autowired
+    private ComputerValidator computerValidator;
 
     @GetMapping("computers/detail/{pk:\\d+}")
     public ResponseEntity<Computer> getComputer(@PathVariable("pk") Long pk) {
@@ -57,51 +60,11 @@ public class ComputerRestController {
         }
     }
 
-    @GetMapping("companies/detail/{name}")
-    public ResponseEntity<Company> getCompany(@PathVariable("name") String name) {
-        Optional<Company> result = companyService.get(name);
-        if(result.isPresent()) {
-            return new ResponseEntity<>(result.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping(path = {
-            "computers",
-            "computers/{page:\\d+}",
-            "computers/{page:\\d+}/{resultsPerPage:\\d+}",
-            "computers/search/{search}",
-            "computers/search/{search}/{page:\\d+}",
-            "computers/search/{search}/{page:\\d+}/{resultsPerPage:\\d+}"
-            })
-    public List<Computer> listComputers(
-            @PathVariable(name = "page", required = false) Optional<Integer> page,
-            @PathVariable(name = "resultsPerPage", required = false) Optional<Integer> resultsPerPage,
-            @PathVariable(name = "search", required = false) Optional<String> search) {
-    	Integer pageValue = page.orElse(0);
+    @GetMapping(path = "computers")
+    public List<Computer> listComputers() {
     	ArrayList<Computer> computerList = computerService.get();
-		Page<Computer> paginator = new Page<>();
 		
-		if(search.isPresent()){
-			ArrayList<Computer> searchList = new ArrayList<Computer>();
-			for (Computer computer : computerList) {
-				if(computer.getName().toLowerCase().startsWith(search.get().toLowerCase()) || (computer.getCompany() != null && computer.getCompany().getName().toLowerCase().startsWith(search.get().toLowerCase())))
-					searchList.add(computer);
-			}
-			computerList = searchList;
-		}
-		if(computerList.size() / paginator.getMaxComputerPerPage() == 0)
-			pageValue = 0;
-		else if(pageValue > computerList.size() / paginator.getMaxComputerPerPage() + (computerList.size() % paginator.getMaxComputerPerPage() == 0 ? 0 : 1))
-			pageValue = computerList.size() / paginator.getMaxComputerPerPage() + (computerList.size() % paginator.getMaxComputerPerPage() == 0 ? 0 : 1);
-			
-		if(resultsPerPage.isPresent())
-			Page.setMaxComputerPerPage(resultsPerPage.get());
-		
-		Page.setPageNumber(pageValue);
-		
-		return paginator.get(computerList);
+		return computerList;
     }
 
     @GetMapping(path = "companies")
@@ -113,8 +76,18 @@ public class ComputerRestController {
 
     @PostMapping(path="computers", consumes = "application/json")
     public ResponseEntity<String> addComputer(@RequestBody Computer computer) {
-        computerService.add(computer);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    	try {
+			computerValidator.checkComputer(
+					computer.getName(), 
+					computer.getIntroducedDate() == null ? "" : computer.getIntroducedDate().toString(), 
+					computer.getDiscontinuedDate() == null ? "" : computer.getDiscontinuedDate().toString(), 
+					computer.getCompany() == null ? null : computer.getCompany().getId().toString());
+	        computerService.add(computer);
+	        
+	        return new ResponseEntity<>(HttpStatus.CREATED);
+		} catch (IncorrectInputException e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
     }
 
     @PutMapping(path = "computers/{pk:\\d+}", consumes = "application/json")
@@ -123,9 +96,18 @@ public class ComputerRestController {
             @RequestBody Computer computer) {
         if(!pk.equals(computer.getId()))
             return new ResponseEntity<>(IDS_DO_NOT_MATCH, HttpStatus.BAD_REQUEST);
-        computerService.update(computer);
+        try {
+			computerValidator.checkComputer(
+					computer.getName(), 
+					computer.getIntroducedDate() == null ? "" : computer.getIntroducedDate().toString(), 
+					computer.getDiscontinuedDate() == null ? "" : computer.getDiscontinuedDate().toString(), 
+					computer.getCompany() == null ? null : computer.getCompany().getId().toString());
+			computerService.update(computer);
         
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IncorrectInputException e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
     }
 
     @DeleteMapping("computers/{pk:\\d+}")

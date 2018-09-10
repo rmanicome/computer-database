@@ -11,6 +11,7 @@ public class ConstantDB {
 	public final static String COMPANY_TABLE = "company";
 	public final static String COMPANY_ID = "id";
 	public final static String COMPANY_NAME = "name";
+	public final static String COMPANY_PICTURE = "picture";
 	
 	public final static String USER_TABLE = "user";
 	public final static String USER_NAME = "username";
