@@ -22,10 +22,11 @@ import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
+import com.excilys.computerdatabase.validator.CompanyValidator;
 import com.excilys.computerdatabase.validator.ComputerValidator;
 import com.excilys.computerdatabase.validator.IncorrectInputException;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(path = "/api/v1.0.0/", produces = "application/json")
 public class ComputerRestController {
@@ -39,6 +40,8 @@ public class ComputerRestController {
     private CompanyService companyService;
     @Autowired
     private ComputerValidator computerValidator;
+    @Autowired
+    private CompanyValidator companyValidator;
 
     @GetMapping("computers/detail/{pk:\\d+}")
     public ResponseEntity<Computer> getComputer(@PathVariable("pk") Long pk) {
@@ -109,6 +112,34 @@ public class ComputerRestController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
+    
+    @PostMapping(path="companies", consumes = "application/json")
+    public ResponseEntity<String> addCompany(@RequestBody Company company) {
+    	try {
+    		companyValidator.checkCompany(company.getName());
+    		companyService.add(company);
+
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    	} catch (IncorrectInputException e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @PutMapping(path = "companies/{pk:\\d+}", consumes = "application/json")
+    public ResponseEntity<String> updateCompany(
+            @PathVariable("pk") Long pk,
+            @RequestBody Company company) {
+        if(!pk.equals(company.getId()))
+            return new ResponseEntity<>(IDS_DO_NOT_MATCH, HttpStatus.BAD_REQUEST);
+        try {
+			companyValidator.checkCompany(company.getName());
+			companyService.update(company);
+        
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IncorrectInputException e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
 
     @DeleteMapping("computers/{pk:\\d+}")
     public ResponseEntity<String> deleteComputer(@PathVariable("pk") Long pk) {
@@ -117,7 +148,7 @@ public class ComputerRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("comapnies/{pk:\\d+}")
+    @DeleteMapping("companies/{pk:\\d+}")
     public ResponseEntity<String> deleteCompany(@PathVariable("pk") Long pk) {
         companyService.delete(companyService.get(pk).get());
         

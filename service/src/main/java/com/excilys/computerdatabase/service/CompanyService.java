@@ -26,6 +26,14 @@ public class CompanyService {
 		return companyDAO.get(id);
 	}
 	
+	public void add(Company company) {
+		companyDAO.add(company);
+	}
+	
+	public void update(Company company) {
+		companyDAO.update(company);
+	}
+	
 	public void delete(Company company){
 		companyDAO.delete(company);
 	}

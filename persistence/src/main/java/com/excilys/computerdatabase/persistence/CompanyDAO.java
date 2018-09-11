@@ -23,7 +23,7 @@ public class CompanyDAO {
 	private final static String GET = "FROM Company";
 	private final static String GET_BY_NAME = "FROM Company WHERE "+ConstantDB.COMPANY_NAME+" = :name"; 
 	private final static String GET_BY_ID = "FROM Company WHERE "+ConstantDB.COMPANY_ID+" = :id";
-	private final static String DELETE_COMPUTER = "DELETE FROM "+ConstantDB.COMPUTER_TABLE+" WHERE "+ConstantDB.COMPUTER_COMPANY_ID+" = :id";
+	private final static String DELETE_COMPUTER = "DELETE FROM Computer WHERE "+ConstantDB.COMPUTER_COMPANY_ID+" = :id";
 	
 	public ArrayList<Company> get() {
 		Session session = SESSION_FACTORY.openSession();
@@ -57,13 +57,29 @@ public class CompanyDAO {
 		return Optional.ofNullable(company);
 	}
 	
+	public void add(Company company) {
+		Session session = SESSION_FACTORY.openSession();
+		session.beginTransaction();
+		session.save(company);
+		session.getTransaction().commit();
+		session.close();
+	}
+	
+	public void update(Company company) {
+		Session session = SESSION_FACTORY.openSession();
+		session.beginTransaction();
+		session.update(company);
+		session.getTransaction().commit();
+		session.close();
+	}
+	
 	@Transactional
 	public void delete(Company comp) {
 		Session session = SESSION_FACTORY.openSession();
-		Query<Computer> query = session.createQuery(DELETE_COMPUTER, Computer.class);
+		session.beginTransaction();
+		Query query = session.createQuery(DELETE_COMPUTER);
 		query.setParameter("id", comp.getId());
 		query.executeUpdate();
-		session.beginTransaction();
 		session.delete(comp);
 		session.getTransaction().commit();
 		session.close();
