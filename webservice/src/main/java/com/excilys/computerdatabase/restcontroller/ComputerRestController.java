@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.excilys.computerdatabase.model.Company;
 import com.excilys.computerdatabase.model.Computer;
+import com.excilys.computerdatabase.model.User;
 import com.excilys.computerdatabase.service.CompanyService;
 import com.excilys.computerdatabase.service.ComputerService;
+import com.excilys.computerdatabase.service.UserService;
 import com.excilys.computerdatabase.validator.CompanyValidator;
 import com.excilys.computerdatabase.validator.ComputerValidator;
 import com.excilys.computerdatabase.validator.IncorrectInputException;
@@ -38,6 +40,8 @@ public class ComputerRestController {
     private ComputerService computerService;
     @Autowired
     private CompanyService companyService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private ComputerValidator computerValidator;
     @Autowired
@@ -153,5 +157,15 @@ public class ComputerRestController {
         companyService.delete(companyService.get(pk).get());
         
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    
+    @GetMapping(path="users/{name}")
+    public ResponseEntity<User> getUserWithPassword(@PathVariable("name") String name) {
+        User result = userService.loadUserByUsername(name);
+        if(result != null) {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

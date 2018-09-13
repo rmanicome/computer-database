@@ -16,4 +16,5 @@ public class ConstantDB {
 	public final static String USER_TABLE = "user";
 	public final static String USER_NAME = "username";
 	public final static String USER_PASSWORD = "password";
+	public final static String USER_ROLE = "role";
 }

@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.computerdatabase.configuration.HibernateConfiguration;
 import com.excilys.computerdatabase.model.Company;
-import com.excilys.computerdatabase.model.Computer;
 import com.excilys.computerdatabase.model.ConstantDB;
 
 @Repository

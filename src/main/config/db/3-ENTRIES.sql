@@ -1,7 +1,10 @@
-insert into company (id,name) values (  1,'Apple Inc.');
-insert into company (id,name) values (  2,'Thinking Machines');
-insert into company (id,name) values (  3,'RCA');
-insert into company (id,name) values (  4,'Netronics');
+insert into user (username,password,role) values ( 'user','user','USER');
+insert into user (username,password,role) values ( 'admin','admin','ADMIN');
+
+insert into company (id,name,picture) values (  1,'Apple Inc.','https://res-4.cloudinary.com/westfielddg/image/fetch/c_pad,f_auto,q_auto/http://res.cloudinary.com/westfielddg/image/upload/zgpsr8ybyukyj9cqfsbi.png');
+insert into company (id,name,picture) values (  2,'Thinking Machines','https://thinkingmachin.es/static/imgs/web-thumb.png');
+insert into company (id,name,picture) values (  3,'RCA','https://d3nevzfk7ii3be.cloudfront.net/igi/4Qt2JFJNUZZFSd1M.large');
+insert into company (id,name,picture) values (  4,'Netronics','http://mitc-ae.net/images/clients/netronics.png');
 insert into company (id,name) values (  5,'Tandy Corporation');
 insert into company (id,name) values (  6,'Commodore International');
 insert into company (id,name) values (  7,'MOS Technology');

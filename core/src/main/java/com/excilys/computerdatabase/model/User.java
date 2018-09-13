@@ -22,7 +22,9 @@ public class User implements UserDetails {
 	@Column(name=ConstantDB.USER_NAME)
 	private String name;
 	@Column(name=ConstantDB.USER_PASSWORD)
-	private String password; 
+	private String password;
+	@Column(name=ConstantDB.USER_ROLE)
+	private String role;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -36,6 +38,14 @@ public class User implements UserDetails {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getRole() {
+		return role;
+	}
+	
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	@Override
